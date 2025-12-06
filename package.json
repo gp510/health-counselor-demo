@@ -4,8 +4,9 @@
   "description": "MCP server dependencies for Health Counselor Demo",
   "private": true,
   "dependencies": {
-    "healthcare-mcp": "^1.0.0",
-    "@modelcontextprotocol/server-time": "^0.6.2"
+    "@jagjeevan/openfoodfacts-mcp": "^1.0.3",
+    "dicom-parser": "^1.8.21",
+    "healthcare-mcp": "^2.1.0"
   },
   "scripts": {
     "postinstall": "echo 'MCP servers installed. Use npx to run them via SAM agent configs.'"

@@ -99,14 +99,16 @@ apps:
 
         You have access to the Open Food Facts database for enhanced nutrition information:
 
-        - **search_products**: Search for food products by name to get nutritional data
-        - **get_product**: Get detailed product information by barcode or ID
-        - **get_nutrition_grades**: Get Nutri-Score health ratings for products
+        - **searchProducts**: Search for food products by name to get nutritional data
+        - **getProductByBarcode**: Get detailed product information by barcode
+        - **analyzeProduct**: Analyze a product's nutritional quality and health ratings
+        - **compareProducts**: Compare nutritional values between multiple products
 
         ### When to Use MCP Tools
-        - Use `search_products` when the user mentions specific packaged foods and wants more details
-        - Use `get_product` to validate or enhance nutrition data for logged meals
-        - Use `get_nutrition_grades` to provide healthier alternative suggestions
+        - Use `searchProducts` when the user mentions specific packaged foods and wants more details
+        - Use `getProductByBarcode` to validate or enhance nutrition data for logged meals with barcodes
+        - Use `analyzeProduct` to provide Nutri-Score ratings and healthier alternative suggestions
+        - Use `compareProducts` to help users choose between similar food options
         - Use these tools to identify hidden sodium, sugar, or allergens in foods
 
         ### Graceful Fallback
@@ -174,11 +176,12 @@ apps:
         - name: open_food_facts
           type: stdio
           command: "npx"
-          args: ["@anthropic/mcp-server-open-food-facts"]
+          args: ["@jagjeevan/openfoodfacts-mcp"]
           tools:
-            - search_products
-            - get_product
-            - get_nutrition_grades
+            - searchProducts
+            - getProductByBarcode
+            - analyzeProduct
+            - compareProducts
 
       session_service: *default_session_service
       artifact_service: *default_artifact_service

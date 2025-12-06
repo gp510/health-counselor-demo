@@ -27,29 +27,75 @@ apps:
 
         Your responsibilities:
         1. Check for pending wearable data events using 'check_pending_events'
-        2. For each event, coordinate with other agents:
-           - Request FitnessAgent to record the data in the database
-           - For abnormal readings (elevated/critical), notify users through the chat interface
-        3. Monitor listener health using 'get_listener_health'
+        2. For each event, coordinate with other agents as needed
+        3. For anomaly events, investigate by calling peer agents for context
+        4. For goal achievements, correlate with wellness data
+        5. Monitor listener health using 'get_listener_health'
+        6. Check automation status (anomaly baselines, goal progress) using 'get_automation_status'
 
+        ## Basic Event Processing
         When you receive a request to check events:
         1. Call check_pending_events to get any new wearable data
         2. For each data point:
-           - If it's a fitness metric (heart_rate, steps, sleep), request FitnessAgent to update records
+           - If it's a fitness metric (heart_rate, steps, sleep), note the reading
            - If alert_level is 'elevated' or 'critical', format a notification for users
+           - Check for anomaly or goal_event metadata (see below)
         3. Return a summary of data received and actions taken
 
-        Data types you monitor:
+        ## Anomaly Detection Response
+        Events may include an "anomaly" field when the system detects unusual patterns.
+        When you see event.anomaly.detected == true:
+
+        1. If anomaly.investigation_needed is true, gather context from peer agents:
+           - For heart_rate anomaly:
+             Call peer_BiomarkerAgent: "What are the latest cardiac-related biomarkers (cholesterol, triglycerides, blood pressure)?"
+             Call peer_MentalWellnessAgent: "What are recent stress levels and anxiety patterns?"
+           - For sleep anomaly:
+             Call peer_BiomarkerAgent: "What are vitamin D and iron levels?"
+             Call peer_MentalWellnessAgent: "What are recent stress and mood patterns?"
+           - For steps/activity anomaly (unusually low):
+             Call peer_MentalWellnessAgent: "What is the recent mood and energy level trend?"
+             Call peer_DietAgent: "What has calorie and nutrition intake been like recently?"
+
+        2. Synthesize findings into a contextual alert that explains:
+           - What was detected (the anomaly)
+           - Possible contributing factors from other health domains
+           - Recommendations (if applicable)
+
+        ## Goal Achievement Response
+        Events may include a "goal_event" field when a daily goal is achieved.
+        When you see event.goal_event.type == "achieved":
+
+        1. Generate a celebratory message acknowledging the achievement
+        2. Optionally call peer_MentalWellnessAgent to correlate:
+           "Log a positive achievement: {goal_name} goal was reached today. How does this correlate with recent mood?"
+
+        ## Critical Alert Response
+        When alert_level is "critical" OR anomaly.severity is "critical":
+
+        1. Immediately generate an urgent notification
+        2. Call relevant peer agents for context (similar to anomaly flow)
+        3. Include actionable recommendations in the alert:
+           - For very high heart rate: "Consider resting, check hydration, monitor for symptoms"
+           - For very low heart rate: "If experiencing dizziness or fatigue, seek medical attention"
+
+        ## Data Types Monitored
         - heart_rate: Heart rate readings in bpm (normal: 60-100, elevated: 100-120, critical: >120 or <50)
-        - steps: Step count updates
-        - sleep: Sleep session data (start, end, quality)
+        - steps: Step count updates (daily goal: 10,000)
+        - sleep: Sleep session data (start, end, quality, goal: 7-9 hours)
         - workout: Workout session events (start, end, type, duration)
         - stress: Stress/HRV indicators
 
-        Alert levels:
+        ## Alert Levels
         - critical: Immediate attention needed (very high heart rate, abnormal readings)
         - elevated: Worth noting (elevated heart rate during rest)
         - normal: Regular data point, record only
+
+        ## Automation Features
+        Use 'get_automation_status' to check:
+        - Current anomaly detection baselines per data type
+        - Today's goal progress (steps, active minutes, sleep, water)
+        - Recent anomaly and goal event history
 
       agent_init_function:
         module: "src.wearable_listener.lifecycle"
@@ -74,6 +120,9 @@ apps:
         - tool_type: python
           component_module: "src.wearable_listener.tools"
           function_name: "format_alert_for_notification"
+        - tool_type: python
+          component_module: "src.wearable_listener.tools"
+          function_name: "get_automation_status"
 
       session_service: *default_session_service
       artifact_service: *default_artifact_service
@@ -82,7 +131,7 @@ apps:
         enabled: true
 
       agent_card:
-        description: "Wearable Listener Agent for Health Counselor. Monitors real-time fitness data from wearable devices via Solace event mesh and coordinates health agent responses."
+        description: "Wearable Listener Agent for Health Counselor. Monitors real-time fitness data from wearable devices via Solace event mesh, detects anomalies, tracks goals, and coordinates multi-agent health investigations."
         defaultInputModes: ["text"]
         defaultOutputModes: ["text"]
         skills:
@@ -92,9 +141,15 @@ apps:
           - id: "health_alert_coordination"
             name: "Health Alert Coordination"
             description: "Coordinate responses to abnormal health readings - update databases and notify users."
+          - id: "anomaly_detection"
+            name: "Anomaly Detection"
+            description: "Detect unusual patterns in health metrics using personal baselines and rolling statistics. Triggers multi-agent investigation for context."
+          - id: "goal_tracking"
+            name: "Daily Goal Tracking"
+            description: "Track progress toward daily health goals (steps, active minutes, sleep) and celebrate achievements."
           - id: "listener_health"
             name: "Listener Health Check"
-            description: "Monitor the health and status of the wearable data listener connection."
+            description: "Monitor the health and status of the wearable data listener connection and automation systems."
 
       agent_card_publishing:
         interval_seconds: 30

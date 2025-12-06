@@ -6,7 +6,11 @@ real-time health data from wearable devices.
 """
 
 from typing import Any, Dict
-from .lifecycle import get_pending_events, get_wearable_listener_status
+from .lifecycle import (
+    get_pending_events,
+    get_wearable_listener_status,
+    get_automation_status as _get_automation_status,
+)
 
 
 def check_pending_events(agent_context=None) -> Dict[str, Any]:
@@ -262,3 +266,26 @@ def categorize_alert_level(data_type: str, value: float) -> str:
         return "elevated"
 
     return "normal"
+
+
+def get_automation_status(agent_context=None) -> Dict[str, Any]:
+    """
+    Get the status of the wearable automation features.
+
+    Returns comprehensive information about:
+    - Anomaly detection: Current baselines per data type, recent anomalies
+    - Goal tracking: Today's progress toward daily health goals
+    - Wearable listener: Connection and event processing status
+
+    This is useful for:
+    - Understanding what the system considers "normal" for each metric
+    - Checking progress toward daily goals (steps, active minutes, sleep)
+    - Diagnosing issues with the automation pipeline
+
+    Returns:
+        Dict with automation status including:
+        - wearable_listener: Connection and event processing status
+        - anomaly_detector: Baselines and detection history
+        - goal_tracker: Today's goal progress and achievements
+    """
+    return _get_automation_status()

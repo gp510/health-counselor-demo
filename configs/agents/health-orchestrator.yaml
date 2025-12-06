@@ -142,15 +142,10 @@ apps:
         - **icd10_lookup**: Get standardized diagnostic codes for conditions
         - **medical_calculator**: Calculate health metrics like BMI, eGFR
 
-        ### Time Tools
-        - **get_current_time**: Get current time in specified timezone
-        - **convert_timezone**: Convert times between timezones
-
         ### When to Use MCP Tools
         - Use `pubmed_search` when users ask about research behind health recommendations
         - Use `fda_drug_lookup` when medications or supplements are mentioned
         - Use `medical_calculator` to compute derived metrics from agent data
-        - Use `get_current_time` for time-aware recommendations and correlations
 
         ### Graceful Fallback
         If an MCP tool call fails or times out:
@@ -176,7 +171,7 @@ apps:
         - tool_type: builtin-group
           group_name: "data_analysis"
 
-      # MCP Server Integration - Healthcare and Time tools for comprehensive analysis
+      # MCP Server Integration - Healthcare tools for comprehensive analysis
       mcp_servers:
         - name: healthcare
           type: stdio
@@ -189,13 +184,6 @@ apps:
             - medical_calculator
           environment_variables:
             NCBI_API_KEY: "${NCBI_API_KEY}"
-        - name: time
-          type: stdio
-          command: "npx"
-          args: ["@modelcontextprotocol/server-time"]
-          tools:
-            - get_current_time
-            - convert_timezone
 
       agent_card:
         description: "Health Counselor Assistant - coordinates specialized health agents to provide personalized wellness guidance, correlating biomarkers, fitness data, nutrition, and mental wellness for holistic health insights."

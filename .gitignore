@@ -41,6 +41,9 @@ dist/
 build/
 *.egg-info/
 
+# Node
+node_modules/
+
 # Local cache/config
 .sam/
 .claude/

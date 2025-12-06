@@ -3,11 +3,17 @@ Wearable Listener Lifecycle Module.
 
 Manages Solace subscription to wearable health data events and coordinates
 responses with other health agents in the mesh.
+
+Includes:
+- Anomaly detection with rolling statistics
+- Goal tracking with achievement notifications
+- Real-time alert publishing to dashboard SSE stream
 """
 
 import os
 import json
 import logging
+import httpx
 from typing import Any, Dict, Optional
 from datetime import datetime, timezone
 
@@ -16,7 +22,14 @@ from solace.messaging.resources.topic_subscription import TopicSubscription
 from solace.messaging.receiver.message_receiver import MessageHandler, InboundMessage
 from solace.messaging.config.transport_security_strategy import TLS
 
+# Import anomaly detection and goal tracking
+from .anomaly_detector import anomaly_detector, check_and_track_anomaly
+from .goal_tracker import goal_tracker, update_goal_progress, check_goals_at_risk
+
 logger = logging.getLogger(__name__)
+
+# Dashboard API URL for publishing alerts
+DASHBOARD_API_URL = os.getenv("DASHBOARD_API_URL", "http://localhost:8082")
 
 
 class WearableListenerState:
@@ -78,6 +91,66 @@ class WearableDataHandler(MessageHandler):
             logger.error(f"[ERROR] Failed to process wearable event: {e}")
 
 
+def publish_alert_to_dashboard(
+    alert_type: str,
+    title: str,
+    message: str,
+    severity: str = "info",
+    data_type: Optional[str] = None,
+    value: Optional[float] = None,
+    baseline: Optional[float] = None,
+    deviation: Optional[float] = None,
+    goal_name: Optional[str] = None,
+    goal_target: Optional[float] = None,
+) -> bool:
+    """
+    Publish an alert to the dashboard API for SSE streaming.
+
+    Args:
+        alert_type: Type of alert (anomaly_detected, goal_achieved, etc.)
+        title: Alert title
+        message: Alert message
+        severity: Alert severity (info, warning, critical)
+        data_type: Type of health data (optional)
+        value: The current value (optional)
+        baseline: Baseline value for anomalies (optional)
+        deviation: Deviation from baseline (optional)
+        goal_name: Name of goal (optional)
+        goal_target: Goal target value (optional)
+
+    Returns:
+        True if alert was published successfully
+    """
+    try:
+        # Build query params
+        params = {
+            "alert_type": alert_type,
+            "message": message,
+        }
+
+        # POST to the test endpoint (we'll enhance this to a proper publish endpoint)
+        # For now, the test endpoint works for publishing alerts
+        response = httpx.post(
+            f"{DASHBOARD_API_URL}/api/health/alerts/automation/test",
+            params=params,
+            timeout=5.0,
+        )
+
+        if response.status_code == 200:
+            logger.info(f"[ALERT PUBLISHED] {alert_type}: {title}")
+            return True
+        else:
+            logger.warning(f"[ALERT FAILED] Status {response.status_code}: {response.text}")
+            return False
+
+    except httpx.ConnectError:
+        logger.debug(f"[ALERT] Dashboard API not available at {DASHBOARD_API_URL}")
+        return False
+    except Exception as e:
+        logger.error(f"[ALERT ERROR] Failed to publish alert: {e}")
+        return False
+
+
 def write_health_notification(event: Dict[str, Any], alert_level: str) -> None:
     """
     Write notification to file for elevated/critical health alerts.
@@ -116,8 +189,11 @@ def process_wearable_data(event: Dict[str, Any], agent_context) -> None:
     Process a wearable health data event.
 
     1. Log the event for monitoring
-    2. Store event for agent processing
-    3. If elevated/critical, write health notification
+    2. Check for anomalies using personal baseline
+    3. Update goal progress
+    4. Store event for agent processing (with anomaly/goal metadata)
+    5. If elevated/critical/anomaly, write health notification
+    6. Publish alerts to dashboard for SSE streaming
 
     Data types handled:
     - heart_rate: Heart rate in bpm
@@ -134,8 +210,85 @@ def process_wearable_data(event: Dict[str, Any], agent_context) -> None:
 
     logger.info(f"[PROCESSING] {data_type}: {value} {unit} ({alert_level})")
 
-    # Store event for agent processing
-    store_pending_event(event)
+    # Convert value to float for analysis
+    try:
+        numeric_value = float(value) if value != "N/A" else None
+    except (ValueError, TypeError):
+        numeric_value = None
+
+    anomaly_result = None
+    goal_event = None
+
+    # Run anomaly detection if we have a numeric value
+    if numeric_value is not None:
+        # Check for anomaly and track in rolling stats
+        is_anomaly, anomaly_result = check_and_track_anomaly(
+            data_type, numeric_value
+        )
+
+        if is_anomaly and anomaly_result:
+            logger.info(
+                f"[ANOMALY] {anomaly_result.message} "
+                f"(baseline: {anomaly_result.baseline_mean:.1f}, "
+                f"deviation: {anomaly_result.deviation_sigma:.1f}σ)"
+            )
+
+            # Publish anomaly alert to dashboard
+            publish_alert_to_dashboard(
+                alert_type="anomaly_detected",
+                title=f"Anomaly: {data_type.replace('_', ' ').title()}",
+                message=anomaly_result.message,
+                severity=anomaly_result.severity,
+                data_type=data_type,
+                value=numeric_value,
+                baseline=anomaly_result.baseline_mean,
+                deviation=anomaly_result.deviation_sigma,
+            )
+
+            # Upgrade alert level if anomaly is significant
+            if anomaly_result.severity == "critical" and alert_level == "normal":
+                alert_level = "critical"
+            elif anomaly_result.severity == "warning" and alert_level == "normal":
+                alert_level = "elevated"
+
+        # Update goal progress
+        goal_event = update_goal_progress(data_type, numeric_value)
+
+        if goal_event:
+            logger.info(f"[GOAL] {goal_event.message}")
+
+            # Publish goal achievement to dashboard
+            publish_alert_to_dashboard(
+                alert_type="goal_achieved",
+                title=f"Goal: {goal_event.goal_name}",
+                message=goal_event.message,
+                severity="info",
+                data_type=data_type,
+                value=numeric_value,
+                goal_name=goal_event.goal_name,
+                goal_target=goal_event.target_value,
+            )
+
+    # Enrich event with anomaly/goal metadata before storing
+    enriched_event = event.copy()
+    if anomaly_result and anomaly_result.detected:
+        enriched_event["anomaly"] = {
+            "detected": True,
+            "baseline_mean": anomaly_result.baseline_mean,
+            "baseline_std": anomaly_result.baseline_std,
+            "deviation_sigma": anomaly_result.deviation_sigma,
+            "severity": anomaly_result.severity,
+            "investigation_needed": anomaly_result.severity in ("warning", "critical"),
+        }
+    if goal_event:
+        enriched_event["goal_event"] = {
+            "type": goal_event.event_type,
+            "goal_name": goal_event.goal_name,
+            "progress_percent": goal_event.progress_percent,
+        }
+
+    # Store enriched event for agent processing
+    store_pending_event(enriched_event)
 
     # Handle alerts based on level
     if alert_level == "critical":
@@ -319,3 +472,36 @@ def get_pending_events() -> list:
         return events
 
     return []
+
+
+def get_anomaly_status() -> Dict[str, Any]:
+    """
+    Get current anomaly detector status.
+
+    Returns statistics about anomaly detection including baselines
+    and recent anomaly history.
+    """
+    return anomaly_detector.get_stats()
+
+
+def get_goal_status() -> Dict[str, Any]:
+    """
+    Get current goal tracking status.
+
+    Returns today's goal progress for all tracked goals.
+    """
+    return goal_tracker.get_summary()
+
+
+def get_automation_status() -> Dict[str, Any]:
+    """
+    Get comprehensive automation status.
+
+    Returns combined status of anomaly detection and goal tracking
+    for monitoring and debugging.
+    """
+    return {
+        "wearable_listener": get_wearable_listener_status(),
+        "anomaly_detector": get_anomaly_status(),
+        "goal_tracker": get_goal_status(),
+    }

@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
-from .routes import biomarkers, fitness, diet, wellness, summary, alerts, insights
+from .routes import biomarkers, fitness, diet, wellness, summary, alerts, insights, automation
 
 settings = get_settings()
 
@@ -18,7 +18,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
     allow_credentials=True,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],  # POST needed for automation test endpoints
     allow_headers=["*"],
 )
 
@@ -30,6 +30,7 @@ app.include_router(diet.router)
 app.include_router(wellness.router)
 app.include_router(alerts.router)
 app.include_router(insights.router)
+app.include_router(automation.router)
 
 
 @app.get("/health")

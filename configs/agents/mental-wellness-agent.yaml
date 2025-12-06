@@ -99,6 +99,14 @@ apps:
         5. **Gentle Suggestions**: Self-care recommendations (not prescriptive)
         6. **Support Reminder**: When appropriate, encourage professional consultation
 
+        ## Temporal Analysis
+
+        Use database timestamps and date fields to provide temporal insights:
+        - Use data timestamps from the database for temporal analysis
+        - Correlate mood patterns with specific times (morning, afternoon, evening)
+        - Consider time-based recommendations (e.g., morning routines for better mood)
+        - Factor in how many days have passed since last high-stress periods
+
       agent_init_function:
         module: "sam_sql_database.lifecycle"
         name: "initialize_sql_agent"

@@ -536,6 +536,166 @@ def run_elevated_hr_scenario(publisher, interval: float = 5):
     print(f"\n[SCENARIO] Heart rate simulation complete")
 
 
+def run_anomaly_detection_scenario(publisher, interval: float = 2, baseline_count: int = 15):
+    """
+    Demonstrate anomaly detection by establishing baseline then triggering deviation.
+
+    This scenario:
+    1. Sends normal heart rate readings to establish a baseline (rolling stats)
+    2. Sends a significantly elevated reading (>2 std dev from baseline)
+    3. The WearableListenerAgent's anomaly detector should flag this
+    4. Agent should query peer agents for context (biomarkers, stress)
+    """
+    print(f"\n[SCENARIO] Anomaly Detection Demo")
+    print(f"[INFO] Phase 1: Establishing baseline with {baseline_count} normal readings...")
+
+    # Phase 1: Establish baseline with consistent normal readings
+    baseline_readings = []
+    for i in range(baseline_count):
+        # Generate consistent resting HR around 68-72 bpm
+        hr = random.randint(68, 72)
+        baseline_readings.append(hr)
+        event = create_health_event("heart_rate", hr)
+        event["metadata"]["context"] = "baseline_establishment"
+        event["metadata"]["reading_number"] = i + 1
+        publish_event(publisher, event)
+        time.sleep(interval)
+
+    avg = sum(baseline_readings) / len(baseline_readings)
+    print(f"\n[INFO] Baseline established: avg={avg:.1f} bpm")
+    print(f"[INFO] Phase 2: Triggering anomaly (elevated HR at rest)...")
+    time.sleep(interval * 2)  # Brief pause
+
+    # Phase 2: Trigger anomaly - significantly elevated HR
+    anomaly_hr = 115  # Well above baseline (~+40 bpm, >2 std dev)
+    event = create_health_event("heart_rate", anomaly_hr)
+    event["alert_level"] = "elevated"
+    event["message"] = "Unexpectedly elevated heart rate - anomaly detected"
+    event["metadata"]["context"] = "anomaly_trigger"
+    event["metadata"]["baseline_avg"] = avg
+    event["metadata"]["deviation"] = anomaly_hr - avg
+    publish_event(publisher, event)
+
+    print(f"\n[EXPECTED] Anomaly detector should flag HR={anomaly_hr} as anomaly")
+    print(f"[EXPECTED] Agent should query BiomarkerAgent and MentalWellnessAgent for context")
+    print(f"\n[SCENARIO] Anomaly detection demo complete")
+
+
+def run_goal_achievement_scenario(publisher, interval: float = 3):
+    """
+    Demonstrate goal tracking by simulating steps accumulating to daily goal.
+
+    This scenario:
+    1. Simulates step count increasing throughout the "day"
+    2. Crosses 50% threshold (at-risk notification if late in day)
+    3. Achieves 10,000 step goal
+    4. The WearableListenerAgent's goal tracker should celebrate achievement
+    """
+    print(f"\n[SCENARIO] Goal Achievement Demo")
+    print(f"[INFO] Simulating step count progression to 10,000 goal...")
+
+    step_milestones = [
+        (2500, "morning activity"),
+        (5000, "mid-morning - 50% progress"),
+        (6500, "afternoon walk"),
+        (8000, "evening progress - 80%"),
+        (9500, "almost there - 95%"),
+        (10200, "GOAL ACHIEVED!"),
+        (10800, "bonus steps"),
+    ]
+
+    for steps, description in step_milestones:
+        context = None
+        if steps >= 10000:
+            context = "goal_reached"
+        elif steps >= 5000:
+            context = "milestone"
+
+        message = get_alert_message("steps", "normal", context)
+
+        event = create_health_event(
+            "steps",
+            steps,
+            alert_level="normal",
+            metadata={
+                "daily_goal": 10000,
+                "progress_percent": min(100, (steps / 10000) * 100),
+                "description": description,
+            },
+        )
+        if context == "goal_reached":
+            event["message"] = "Congratulations! Daily step goal of 10,000 achieved!"
+
+        print(f"\n[MILESTONE] {steps:,} steps - {description}")
+        publish_event(publisher, event)
+        time.sleep(interval)
+
+    print(f"\n[EXPECTED] Goal tracker should have fired 'goal_achieved' event at 10,000 steps")
+    print(f"[EXPECTED] Dashboard should show celebration notification")
+    print(f"\n[SCENARIO] Goal achievement demo complete")
+
+
+def run_full_automation_demo(publisher, interval: float = 2):
+    """
+    Run a comprehensive automation demo combining anomaly detection and goal tracking.
+
+    This is the recommended demo scenario to show all automation features.
+    """
+    print(f"\n{'='*60}")
+    print(f"FULL AUTOMATION DEMO")
+    print(f"{'='*60}")
+    print(f"\nThis demo showcases:")
+    print(f"  1. Anomaly detection with baseline tracking")
+    print(f"  2. Goal tracking with achievement notifications")
+    print(f"  3. Real-time SSE alerts to dashboard")
+    print(f"\nMake sure to:")
+    print(f"  - Have WearableListenerAgent running (sam run configs/agents/wearable-listener-agent.yaml)")
+    print(f"  - Have Dashboard API running (python -m uvicorn server.dashboard_api.main:app)")
+    print(f"  - Watch dashboard for real-time alerts")
+    print(f"\n{'='*60}\n")
+
+    time.sleep(3)  # Give user time to read
+
+    # Part 1: Goal Achievement
+    print(f"\n[PART 1/3] Goal Achievement Demo")
+    print("-" * 40)
+    run_goal_achievement_scenario(publisher, interval)
+
+    time.sleep(5)
+
+    # Part 2: Anomaly Detection
+    print(f"\n[PART 2/3] Anomaly Detection Demo")
+    print("-" * 40)
+    run_anomaly_detection_scenario(publisher, interval, baseline_count=10)
+
+    time.sleep(5)
+
+    # Part 3: Mixed activity
+    print(f"\n[PART 3/3] Mixed Activity Demo")
+    print("-" * 40)
+    print(f"[INFO] Simulating various health events...")
+
+    events = [
+        generate_stress_reading(),
+        generate_heart_rate("resting"),
+        generate_sleep_event(7.5, 85),
+        generate_workout_event("walking", 25, "completed"),
+    ]
+
+    for event in events:
+        publish_event(publisher, event)
+        time.sleep(interval)
+
+    print(f"\n{'='*60}")
+    print(f"AUTOMATION DEMO COMPLETE")
+    print(f"{'='*60}")
+    print(f"\nCheck the dashboard API for:")
+    print(f"  - GET /api/health/alerts/history - Recent alerts")
+    print(f"  - GET /api/health/alerts/stream - SSE stream (if connected)")
+    print(f"  - POST /api/automation/reports/generate - Generate health report")
+    print(f"{'='*60}")
+
+
 def run_single_event(publisher, data_type: str, value: float, unit: str = None):
     """Publish a single health event."""
     print(f"\n[SCENARIO] Single event: {data_type} = {value}")
@@ -570,14 +730,25 @@ Examples:
 
   # Random events, limited count
   python scripts/wearable_simulator.py --scenario random --count 5 --interval 5
+
+  # === AUTOMATION DEMO SCENARIOS ===
+
+  # Anomaly Detection: Establish baseline then trigger anomaly
+  python scripts/wearable_simulator.py --scenario anomaly --interval 2
+
+  # Goal Tracking: Simulate steps progressing to 10,000 goal
+  python scripts/wearable_simulator.py --scenario goal --interval 3
+
+  # Full Automation Demo: All features combined (RECOMMENDED)
+  python scripts/wearable_simulator.py --scenario full-demo --interval 2
         """,
     )
 
     parser.add_argument(
         "--scenario",
-        choices=["random", "workout", "sleep", "stress", "elevated-hr"],
+        choices=["random", "workout", "sleep", "stress", "elevated-hr", "anomaly", "goal", "full-demo"],
         default="random",
-        help="Scenario to run (default: random)",
+        help="Scenario to run (default: random). New: anomaly, goal, full-demo for automation features",
     )
     parser.add_argument(
         "--type",
@@ -677,6 +848,12 @@ Examples:
             run_stress_scenario(publisher, args.interval)
         elif args.scenario == "elevated-hr":
             run_elevated_hr_scenario(publisher, args.interval)
+        elif args.scenario == "anomaly":
+            run_anomaly_detection_scenario(publisher, args.interval)
+        elif args.scenario == "goal":
+            run_goal_achievement_scenario(publisher, args.interval)
+        elif args.scenario == "full-demo":
+            run_full_automation_demo(publisher, args.interval)
 
         print("\n[INFO] Simulation complete")
 

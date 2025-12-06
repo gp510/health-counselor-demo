@@ -89,14 +89,16 @@ apps:
 
         - **fda_drug_lookup**: Look up drug information, interactions, and side effects from FDA database
         - **pubmed_search**: Search PubMed for relevant research articles about biomarkers or conditions
-        - **icd10_lookup**: Look up standardized ICD-10 diagnostic codes for conditions
-        - **medical_calculator**: Calculate health metrics like BMI, eGFR, and other clinical values
+        - **lookup_icd_code**: Look up standardized ICD-10 diagnostic codes for conditions
+        - **calculate_bmi**: Calculate BMI from height and weight data
+        - **clinical_trials_search**: Search for relevant clinical trials
+        - **health_topics**: Look up general health topic information
 
         ### When to Use MCP Tools
         - Use `fda_drug_lookup` when the user mentions medications or supplements that might affect biomarkers
         - Use `pubmed_search` when abnormal biomarkers need research context (e.g., "What does research say about low Vitamin D?")
-        - Use `icd10_lookup` to provide standardized condition codes when relevant
-        - Use `medical_calculator` to compute derived health metrics from biomarker data
+        - Use `lookup_icd_code` to provide standardized condition codes when relevant
+        - Use `calculate_bmi` to compute BMI from height and weight measurements
 
         ### Graceful Fallback
         If an MCP tool call fails or times out:
@@ -165,8 +167,10 @@ apps:
           tools:
             - fda_drug_lookup
             - pubmed_search
-            - icd10_lookup
-            - medical_calculator
+            - lookup_icd_code
+            - calculate_bmi
+            - clinical_trials_search
+            - health_topics
           environment_variables:
             NCBI_API_KEY: "${NCBI_API_KEY}"
 
