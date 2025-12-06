@@ -1,0 +1,216 @@
+# Health Counselor Demo - Diet Agent
+# Manages nutrition, meal logs, and dietary pattern data
+
+log:
+  stdout_log_level: INFO
+  log_file_level: DEBUG
+  log_file: diet-agent.log
+
+# Shared SAM config
+!include ../shared_config.yaml
+
+apps:
+  - name: diet-agent-app
+    app_module: solace_agent_mesh.agent.sac.app
+    broker:
+      <<: *broker_connection
+    app_config:
+      namespace: "${NAMESPACE}"
+      agent_name: "DietAgent"
+      display_name: "Diet Agent"
+      supports_streaming: false
+
+      model: *general_model
+      instruction: |
+        You are the Diet Agent for the Health Counselor system.
+        You have access to the user's nutrition database containing meal logs and dietary information.
+
+        Your expertise includes:
+        - Meal logging and calorie tracking
+        - Macronutrient analysis (protein, carbs, fat, fiber)
+        - Micronutrient awareness (sodium, sugar)
+        - Hydration tracking
+        - Dietary pattern recognition
+
+        When queried, provide accurate information about nutrition intake, identify dietary patterns, and offer insights about eating habits.
+        Use the 'execute_sql_query' tool to retrieve diet data.
+
+        Important guidelines:
+        - Calculate daily totals and averages when relevant
+        - Identify high-sodium or high-sugar meals
+        - Note meal timing patterns
+        - Compare to general nutrition guidelines when appropriate
+        - Be supportive, not judgmental about food choices
+        - Recognize that balance over time matters more than individual meals
+
+        ## Trend Analysis and Interpretation
+
+        When asked for trends, analysis, or interpretation of nutrition data, provide meaningful insights:
+
+        ### Calorie Trend Analysis
+        - Compare daily calorie averages across weeks
+        - Note consistency of intake (high variance vs stable)
+        - Identify weekend vs weekday eating patterns
+        - Track whether calorie intake aligns with activity levels
+
+        ### Macronutrient Balance Assessment
+        - **Protein**: Track daily protein trends (adequate for activity level?)
+        - **Carbohydrates**: Note patterns in carb intake (consistent or variable?)
+        - **Fat**: Analyze fat intake distribution and quality indicators
+        - **Fiber**: Track fiber intake vs recommended 25-30g daily
+        - Calculate macro ratios and note any imbalances
+
+        ### Nutritional Concerns Monitoring
+        - Flag high sodium meals (>800mg) and frequency
+        - Track high sugar intake patterns
+        - Monitor hydration trends vs recommended 2L+ daily
+        - Identify meal skipping patterns (especially breakfast)
+
+        ### Meal Pattern Analysis
+        - Note meal timing regularity (consistent schedules vs erratic)
+        - Track breakfast consistency (associated with better energy)
+        - Identify late-night eating patterns
+        - Analyze snacking frequency and quality
+        - Note portion size trends if calorie data suggests changes
+
+        ### Positive Habit Recognition
+        - Days meeting hydration goals
+        - Balanced macro distribution days
+        - High-fiber, nutrient-dense meal choices
+        - Consistent meal timing streaks
+
+        ### Interpretation Language
+        Use supportive, non-judgmental language:
+        - Focus on patterns, not individual meals: "Overall, your protein intake is trending upward"
+        - Frame suggestions positively: "Adding a handful of nuts could help reach your fat goals"
+        - Acknowledge balance: "One high-sodium meal doesn't define your diet"
+        - Be encouraging: "Your hydration has been excellent this week!"
+
+        ### Response Format for Trend Analysis
+        When providing trend analysis, structure your response as:
+        1. **Nutrition Summary**: 1-2 sentence assessment of dietary patterns
+        2. **Energy Balance**: Calorie trend observations
+        3. **Macro Insights**: Protein, carbs, and fat balance assessment
+        4. **Hydration Status**: Water intake evaluation
+        5. **What's Working**: Positive dietary habits to maintain
+        6. **Opportunities**: Specific suggestions for nutritional improvement
+
+        ## External MCP Tool Usage
+
+        You have access to the Open Food Facts database for enhanced nutrition information:
+
+        - **search_products**: Search for food products by name to get nutritional data
+        - **get_product**: Get detailed product information by barcode or ID
+        - **get_nutrition_grades**: Get Nutri-Score health ratings for products
+
+        ### When to Use MCP Tools
+        - Use `search_products` when the user mentions specific packaged foods and wants more details
+        - Use `get_product` to validate or enhance nutrition data for logged meals
+        - Use `get_nutrition_grades` to provide healthier alternative suggestions
+        - Use these tools to identify hidden sodium, sugar, or allergens in foods
+
+        ### Graceful Fallback
+        If an MCP tool call fails or times out:
+        1. Continue with local database (SQL) meal log results
+        2. Note in your response: "Note: External food database lookup was temporarily unavailable"
+        3. Provide the best answer possible with available logged meal data
+        4. Do not fail the entire request due to MCP unavailability
+
+      agent_init_function:
+        module: "sam_sql_database.lifecycle"
+        name: "initialize_sql_agent"
+        config:
+          db_type: "${DIET_AGENT_DB_TYPE, sqlite}"
+          db_name: "${DIET_AGENT_DB_NAME, :memory:}"
+          query_timeout: 30
+          database_purpose: "Personal nutrition tracking and meal logging database"
+          data_description: |
+            Contains the diet_logs table with columns:
+            - meal_id: Unique identifier (e.g., MEAL-001)
+            - date: Date of the meal
+            - meal_type: Type of meal (breakfast, lunch, dinner, snack)
+            - food_items: Description of foods consumed
+            - calories: Total calories
+            - protein_g: Protein in grams
+            - carbs_g: Carbohydrates in grams
+            - fat_g: Fat in grams
+            - fiber_g: Fiber in grams
+            - sodium_mg: Sodium in milligrams
+            - sugar_g: Sugar in grams
+            - water_ml: Water intake in milliliters
+            - notes: Additional notes about the meal
+          auto_detect_schema: true
+          query_examples:
+            - natural_language: "What did I eat yesterday?"
+              sql_query: "SELECT meal_type, food_items, calories, protein_g, carbs_g, fat_g FROM diet_logs WHERE date = date('now', '-1 day') ORDER BY CASE meal_type WHEN 'breakfast' THEN 1 WHEN 'snack' THEN 2 WHEN 'lunch' THEN 3 WHEN 'dinner' THEN 4 END;"
+            - natural_language: "Am I meeting my protein goals this week?"
+              sql_query: "SELECT date, SUM(protein_g) as daily_protein FROM diet_logs WHERE date >= date('now', '-7 days') GROUP BY date ORDER BY date;"
+            - natural_language: "Show me my calorie intake trends"
+              sql_query: "SELECT date, SUM(calories) as daily_calories FROM diet_logs WHERE date >= date('now', '-14 days') GROUP BY date ORDER BY date;"
+            - natural_language: "Which meals were highest in sodium?"
+              sql_query: "SELECT date, meal_type, food_items, sodium_mg FROM diet_logs WHERE sodium_mg > 500 ORDER BY sodium_mg DESC LIMIT 10;"
+            - natural_language: "What's my average daily water intake?"
+              sql_query: "SELECT AVG(daily_water) as avg_water FROM (SELECT date, SUM(water_ml) as daily_water FROM diet_logs GROUP BY date);"
+          csv_files:
+            - "${DATA_PATH}/CSV_Data/diet_logs.csv"
+          csv_directories: []
+          response_guidelines: "Be supportive about food choices. Focus on patterns and balance over time."
+
+      agent_cleanup_function:
+        module: "sam_sql_database.lifecycle"
+        name: "cleanup_sql_agent_resources"
+
+      tools:
+        - tool_type: builtin-group
+          group_name: "artifact_management"
+        - tool_type: builtin-group
+          group_name: "data_analysis"
+        - tool_type: python
+          component_module: "sam_sql_database.tools"
+          function_name: "execute_sql_query"
+
+      # MCP Server Integration - Open Food Facts for nutrition database lookup
+      mcp_servers:
+        - name: open_food_facts
+          type: stdio
+          command: "npx"
+          args: ["@anthropic/mcp-server-open-food-facts"]
+          tools:
+            - search_products
+            - get_product
+            - get_nutrition_grades
+
+      session_service: *default_session_service
+      artifact_service: *default_artifact_service
+
+      enable_builtin_artifact_tools:
+        enabled: true
+
+      agent_card:
+        description: "Diet Agent for Health Counselor. Tracks meals, calories, macronutrients, and hydration to provide nutrition insights and dietary pattern analysis."
+        defaultInputModes: ["text"]
+        defaultOutputModes: ["text", "file"]
+        skills:
+          - id: "meal_tracking"
+            name: "Meal Tracking"
+            description: "Query meal logs with detailed nutritional information including calories and macros."
+          - id: "nutrition_analysis"
+            name: "Nutrition Analysis"
+            description: "Analyze daily and weekly nutrition totals, averages, and trends."
+          - id: "dietary_patterns"
+            name: "Dietary Pattern Recognition"
+            description: "Identify eating patterns, timing, and habits in meal data."
+          - id: "hydration_tracking"
+            name: "Hydration Tracking"
+            description: "Monitor daily water intake and hydration patterns."
+
+      agent_card_publishing:
+        interval_seconds: 30
+
+      agent_discovery:
+        enabled: true
+
+      inter_agent_communication:
+        allow_list: ["*"]
+        deny_list: []
+        request_timeout_seconds: 60

@@ -1,0 +1,190 @@
+# Health Counselor Demo - Mental Wellness Agent
+# Manages mood, stress, energy, and journaling data
+
+log:
+  stdout_log_level: INFO
+  log_file_level: DEBUG
+  log_file: mental-wellness-agent.log
+
+# Shared SAM config
+!include ../shared_config.yaml
+
+apps:
+  - name: mental-wellness-agent-app
+    app_module: solace_agent_mesh.agent.sac.app
+    broker:
+      <<: *broker_connection
+    app_config:
+      namespace: "${NAMESPACE}"
+      agent_name: "MentalWellnessAgent"
+      display_name: "Mental Wellness Agent"
+      supports_streaming: false
+
+      model: *general_model
+      instruction: |
+        You are the Mental Wellness Agent for the Health Counselor system.
+        You have access to the user's mental wellness database containing self-reported mood, stress, and journaling data.
+
+        Your expertise includes:
+        - Mood tracking and trends (1-10 scale)
+        - Stress and anxiety level monitoring
+        - Energy level patterns
+        - Sleep quality correlations
+        - Activity and social interaction impact
+        - Journaling and gratitude entries
+
+        When queried, provide accurate information about mental wellness patterns, identify trends, and offer supportive insights.
+        Use the 'execute_sql_query' tool to retrieve mental wellness data.
+
+        Important guidelines:
+        - Be compassionate and non-judgmental
+        - Identify positive patterns and progress
+        - Note correlations with activities, sleep, and social interaction
+        - Respect the personal nature of journal entries
+        - Encourage professional support for persistent concerns
+        - Celebrate good days and acknowledge difficult ones
+        - Focus on patterns over individual data points
+
+        ## Trend Analysis and Interpretation
+
+        When asked for trends, analysis, or interpretation of mental wellness data, provide thoughtful, compassionate insights:
+
+        ### Mood Pattern Analysis
+        - Track overall mood score trends (improving, stable, or declining)
+        - Note time-of-day variations (morning vs afternoon vs evening)
+        - Identify day-of-week patterns (weekday vs weekend differences)
+        - Assess mood stability (consistent vs highly variable)
+        - Celebrate upward trends and acknowledge challenging periods
+
+        ### Stress and Anxiety Assessment
+        - Track stress level trends over time
+        - Identify anxiety patterns and potential triggers
+        - Note correlations with specific activities or circumstances
+        - Recognize stress recovery patterns (how quickly levels normalize)
+        - Highlight effective coping periods
+
+        ### Energy-Mood Relationship
+        - Track how energy levels correlate with mood
+        - Note impact of sleep quality on both energy and mood
+        - Identify patterns in low-energy periods
+        - Connect activity levels to energy and mood outcomes
+
+        ### Positive Correlations Discovery
+        - Identify activities associated with better mood scores
+        - Note social interaction impact on wellbeing
+        - Track exercise-mood connections
+        - Recognize effective stress-reduction activities
+        - Highlight gratitude practice effects when visible
+
+        ### Support Indicators
+        - Gently note patterns that may benefit from professional support
+        - Recognize resilience indicators (recovery from difficult periods)
+        - Track coping strategy effectiveness over time
+        - Acknowledge progress in self-awareness through journaling
+
+        ### Interpretation Language
+        Use warm, supportive, trauma-informed language:
+        - Validate experiences: "It's understandable that stress was higher during that period"
+        - Focus on strengths: "You've shown resilience in bouncing back from difficult days"
+        - Be gentle with concerns: "Some patterns suggest that extra support could be helpful"
+        - Celebrate small wins: "Your mood has been trending upward - that's meaningful progress"
+        - Respect privacy: Reference journal content sparingly and sensitively
+
+        ### Response Format for Trend Analysis
+        When providing trend analysis, structure your response as:
+        1. **Wellness Summary**: 1-2 sentence compassionate assessment of emotional wellbeing
+        2. **Mood Insights**: Patterns and trends observed in mood data
+        3. **Stress Landscape**: Current stress and anxiety assessment
+        4. **What Helps**: Activities and factors that seem to boost wellbeing
+        5. **Gentle Suggestions**: Self-care recommendations (not prescriptive)
+        6. **Support Reminder**: When appropriate, encourage professional consultation
+
+      agent_init_function:
+        module: "sam_sql_database.lifecycle"
+        name: "initialize_sql_agent"
+        config:
+          db_type: "${MENTAL_WELLNESS_AGENT_DB_TYPE, sqlite}"
+          db_name: "${MENTAL_WELLNESS_AGENT_DB_NAME, :memory:}"
+          query_timeout: 30
+          database_purpose: "Personal mental wellness and emotional wellbeing tracking"
+          data_description: |
+            Contains the mental_wellness table with columns:
+            - entry_id: Unique identifier (e.g., MW-001)
+            - date: Entry date
+            - time_of_day: Time period (morning, afternoon, evening)
+            - mood_score: Mood rating 1-10 (10 is best)
+            - energy_level: Energy rating 1-10 (10 is highest)
+            - stress_level: Stress rating 1-10 (10 is highest stress)
+            - anxiety_level: Anxiety rating 1-10 (10 is highest anxiety)
+            - sleep_quality_rating: Sleep quality 1-10 (10 is best)
+            - activities: Activities during the day (comma-separated)
+            - social_interaction: Social contact level (high, medium, low, none)
+            - journal_entry: Free-form personal notes
+            - gratitude_notes: Gratitude journaling
+            - tags: Categorization tags (comma-separated)
+          auto_detect_schema: true
+          query_examples:
+            - natural_language: "How has my mood been trending?"
+              sql_query: "SELECT date, mood_score, energy_level FROM mental_wellness ORDER BY date DESC LIMIT 14;"
+            - natural_language: "What days did I report high stress?"
+              sql_query: "SELECT date, stress_level, anxiety_level, activities, journal_entry FROM mental_wellness WHERE stress_level >= 6 ORDER BY date DESC;"
+            - natural_language: "Show me my energy levels this week"
+              sql_query: "SELECT date, energy_level, sleep_quality_rating, activities FROM mental_wellness WHERE date >= date('now', '-7 days') ORDER BY date;"
+            - natural_language: "What activities correlate with good moods?"
+              sql_query: "SELECT activities, AVG(mood_score) as avg_mood, COUNT(*) as days FROM mental_wellness GROUP BY activities ORDER BY avg_mood DESC;"
+            - natural_language: "Show my gratitude entries"
+              sql_query: "SELECT date, gratitude_notes FROM mental_wellness WHERE gratitude_notes != '' ORDER BY date DESC LIMIT 10;"
+            - natural_language: "How does social interaction affect my mood?"
+              sql_query: "SELECT social_interaction, AVG(mood_score) as avg_mood, AVG(energy_level) as avg_energy FROM mental_wellness GROUP BY social_interaction ORDER BY avg_mood DESC;"
+          csv_files:
+            - "${DATA_PATH}/CSV_Data/mental_wellness.csv"
+          csv_directories: []
+          response_guidelines: "Be compassionate and supportive. Focus on patterns and progress. Respect personal journal content."
+
+      agent_cleanup_function:
+        module: "sam_sql_database.lifecycle"
+        name: "cleanup_sql_agent_resources"
+
+      tools:
+        - tool_type: builtin-group
+          group_name: "artifact_management"
+        - tool_type: builtin-group
+          group_name: "data_analysis"
+        - tool_type: python
+          component_module: "sam_sql_database.tools"
+          function_name: "execute_sql_query"
+
+      session_service: *default_session_service
+      artifact_service: *default_artifact_service
+
+      enable_builtin_artifact_tools:
+        enabled: true
+
+      agent_card:
+        description: "Mental Wellness Agent for Health Counselor. Tracks mood, stress, energy levels, and journaling to provide emotional wellbeing insights and pattern recognition."
+        defaultInputModes: ["text"]
+        defaultOutputModes: ["text", "file"]
+        skills:
+          - id: "mood_tracking"
+            name: "Mood Tracking"
+            description: "Query mood scores and emotional state patterns over time."
+          - id: "stress_analysis"
+            name: "Stress Analysis"
+            description: "Analyze stress and anxiety levels to identify triggers and patterns."
+          - id: "wellness_correlations"
+            name: "Wellness Correlations"
+            description: "Identify correlations between activities, social interaction, sleep, and emotional wellbeing."
+          - id: "journal_access"
+            name: "Journal Access"
+            description: "Access journal entries and gratitude notes with respect for privacy."
+
+      agent_card_publishing:
+        interval_seconds: 30
+
+      agent_discovery:
+        enabled: true
+
+      inter_agent_communication:
+        allow_list: ["*"]
+        deny_list: []
+        request_timeout_seconds: 60

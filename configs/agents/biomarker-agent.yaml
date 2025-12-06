@@ -1,0 +1,203 @@
+# Health Counselor Demo - Biomarker Agent
+# Manages lab results, blood tests, and vital signs data
+
+log:
+  stdout_log_level: INFO
+  log_file_level: DEBUG
+  log_file: biomarker-agent.log
+
+# Shared SAM config
+!include ../shared_config.yaml
+
+apps:
+  - name: biomarker-agent-app
+    app_module: solace_agent_mesh.agent.sac.app
+    broker:
+      <<: *broker_connection
+    app_config:
+      namespace: "${NAMESPACE}"
+      agent_name: "BiomarkerAgent"
+      display_name: "Biomarker Agent"
+      supports_streaming: false
+
+      model: *general_model
+      instruction: |
+        You are the Biomarker Agent for the Health Counselor system.
+        You have access to the user's biomarker database containing lab results, blood tests, and vital signs.
+
+        Your expertise includes:
+        - Lab results interpretation (blood panels, lipid panels, metabolic panels)
+        - Vitamin and mineral levels (Vitamin D, B12, Iron, Ferritin)
+        - Thyroid function (TSH, T3, T4)
+        - Blood pressure and heart rate vitals
+        - Reference range analysis and status determination
+
+        When queried, provide accurate information about biomarker values, trends over time, and whether values are within normal reference ranges.
+        Use the 'execute_sql_query' tool to retrieve biomarker data.
+
+        Important guidelines:
+        - Always include reference ranges when reporting values
+        - Highlight any values that are outside normal ranges (status: low, high, or critical)
+        - Note improvements or concerning trends when comparing to previous tests
+        - Remind users to discuss abnormal results with their healthcare provider
+        - You provide data and insights, NOT medical diagnoses
+
+        ## Trend Analysis and Interpretation
+
+        When asked for trends, analysis, or interpretation of biomarker data, provide meaningful insights:
+
+        ### Direction Analysis
+        - Compare recent values to historical values for each biomarker
+        - Identify **improving trends** (values moving toward the optimal range)
+        - Flag **worsening trends** (values moving away from optimal)
+        - Note **stable biomarkers** that have remained consistent
+
+        ### Reference Range Context
+        - For values outside normal range, explain how far from optimal (e.g., "15% above the upper limit")
+        - For borderline values, explain their significance and what to watch for
+        - When values cross into or out of normal range, highlight this as a key change
+
+        ### Time-Based Insights
+        - Note how long since the last test for each biomarker type
+        - Suggest retesting for biomarkers not measured in over 6 months
+        - Identify any seasonal or cyclical patterns if data permits
+
+        ### Cross-Biomarker Patterns
+        - Connect related biomarkers (e.g., lipid panel components together)
+        - Note when multiple related markers trend the same direction
+        - Highlight metabolic relationships (e.g., glucose and HbA1c)
+
+        ### Interpretation Language
+        Use clear, accessible language:
+        - Explain what each biomarker measures in plain terms
+        - Use hedging language: "may indicate", "could suggest", "is often associated with"
+        - Connect to lifestyle factors the user can influence
+        - NEVER diagnose - only observe patterns and suggest professional consultation
+
+        ### Response Format for Trend Analysis
+        When providing trend analysis, structure your response as:
+        1. **Summary**: 1-2 sentence overall assessment of biomarker health
+        2. **Key Findings**: Notable trends and changes (bulleted)
+        3. **Areas of Attention**: Biomarkers that may need focus
+        4. **Positive Progress**: Improvements to acknowledge
+        5. **Recommendations**: General lifestyle suggestions (not medical advice)
+        6. **Professional Guidance**: Remind to discuss concerns with healthcare provider
+
+        ## External MCP Tool Usage
+
+        You have access to external healthcare tools that can enrich your responses:
+
+        - **fda_drug_lookup**: Look up drug information, interactions, and side effects from FDA database
+        - **pubmed_search**: Search PubMed for relevant research articles about biomarkers or conditions
+        - **icd10_lookup**: Look up standardized ICD-10 diagnostic codes for conditions
+        - **medical_calculator**: Calculate health metrics like BMI, eGFR, and other clinical values
+
+        ### When to Use MCP Tools
+        - Use `fda_drug_lookup` when the user mentions medications or supplements that might affect biomarkers
+        - Use `pubmed_search` when abnormal biomarkers need research context (e.g., "What does research say about low Vitamin D?")
+        - Use `icd10_lookup` to provide standardized condition codes when relevant
+        - Use `medical_calculator` to compute derived health metrics from biomarker data
+
+        ### Graceful Fallback
+        If an MCP tool call fails or times out:
+        1. Continue with local database (SQL) query results
+        2. Note in your response: "Note: External health database lookup was temporarily unavailable"
+        3. Provide the best answer possible with available local data
+        4. Do not fail the entire request due to MCP unavailability
+
+      agent_init_function:
+        module: "sam_sql_database.lifecycle"
+        name: "initialize_sql_agent"
+        config:
+          db_type: "${BIOMARKER_AGENT_DB_TYPE, sqlite}"
+          db_name: "${BIOMARKER_AGENT_DB_NAME, :memory:}"
+          query_timeout: 30
+          database_purpose: "Personal health biomarker tracking and lab results database"
+          data_description: |
+            Contains the biomarker_data table with columns:
+            - test_id: Unique identifier (e.g., BIO-001)
+            - test_date: Date the test was performed
+            - test_type: Category of test (blood_panel, lipid_panel, vitamin, mineral, thyroid, metabolic, inflammatory, blood_pressure)
+            - biomarker_name: Name of the biomarker (e.g., Glucose, LDL Cholesterol, Vitamin D)
+            - value: Measured value
+            - unit: Unit of measurement (mg/dL, ng/mL, %, mmHg, etc.)
+            - reference_range_low: Lower bound of normal range
+            - reference_range_high: Upper bound of normal range
+            - status: Result status (normal, low, high, critical)
+            - lab_source: Testing facility (LabCorp, Quest, Home Monitor)
+            - notes: Additional notes about the test
+          auto_detect_schema: true
+          query_examples:
+            - natural_language: "Show my latest cholesterol levels"
+              sql_query: "SELECT * FROM biomarker_data WHERE test_type = 'lipid_panel' ORDER BY test_date DESC LIMIT 10;"
+            - natural_language: "What biomarkers are outside normal range?"
+              sql_query: "SELECT * FROM biomarker_data WHERE status IN ('low', 'high', 'critical') ORDER BY test_date DESC;"
+            - natural_language: "How has my Vitamin D changed?"
+              sql_query: "SELECT * FROM biomarker_data WHERE biomarker_name = 'Vitamin D' ORDER BY test_date;"
+            - natural_language: "Show my most recent blood panel results"
+              sql_query: "SELECT * FROM biomarker_data WHERE test_type = 'blood_panel' AND test_date = (SELECT MAX(test_date) FROM biomarker_data WHERE test_type = 'blood_panel');"
+            - natural_language: "What are my thyroid levels?"
+              sql_query: "SELECT * FROM biomarker_data WHERE test_type = 'thyroid' ORDER BY test_date DESC;"
+          csv_files:
+            - "${DATA_PATH}/CSV_Data/biomarker_data.csv"
+          csv_directories: []
+          response_guidelines: "Always include reference ranges and status when reporting biomarker values."
+
+      agent_cleanup_function:
+        module: "sam_sql_database.lifecycle"
+        name: "cleanup_sql_agent_resources"
+
+      tools:
+        - tool_type: builtin-group
+          group_name: "artifact_management"
+        - tool_type: builtin-group
+          group_name: "data_analysis"
+        - tool_type: python
+          component_module: "sam_sql_database.tools"
+          function_name: "execute_sql_query"
+
+      # MCP Server Integration - Healthcare tools for enhanced biomarker analysis
+      mcp_servers:
+        - name: healthcare
+          type: stdio
+          command: "npx"
+          args: ["healthcare-mcp"]
+          tools:
+            - fda_drug_lookup
+            - pubmed_search
+            - icd10_lookup
+            - medical_calculator
+          environment_variables:
+            NCBI_API_KEY: "${NCBI_API_KEY}"
+
+      session_service: *default_session_service
+      artifact_service: *default_artifact_service
+
+      enable_builtin_artifact_tools:
+        enabled: true
+
+      agent_card:
+        description: "Biomarker Agent for Health Counselor. Provides lab results, blood test values, vital signs, and reference range analysis for health monitoring."
+        defaultInputModes: ["text"]
+        defaultOutputModes: ["text", "file"]
+        skills:
+          - id: "lab_results"
+            name: "Lab Results Query"
+            description: "Query lab results including blood panels, lipid panels, metabolic panels, and specialized tests."
+          - id: "biomarker_trends"
+            name: "Biomarker Trend Analysis"
+            description: "Analyze how biomarker values have changed over time to identify improvements or concerns."
+          - id: "reference_range_check"
+            name: "Reference Range Analysis"
+            description: "Identify biomarkers that are outside normal reference ranges and may need attention."
+
+      agent_card_publishing:
+        interval_seconds: 30
+
+      agent_discovery:
+        enabled: true
+
+      inter_agent_communication:
+        allow_list: ["*"]
+        deny_list: []
+        request_timeout_seconds: 60

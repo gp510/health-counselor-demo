@@ -1,0 +1,36 @@
+entry_id,date,time_of_day,mood_score,energy_level,stress_level,anxiety_level,sleep_quality_rating,activities,social_interaction,journal_entry,gratitude_notes,tags
+MW-001,2024-11-01,morning,7,6,4,3,8,work;exercise,medium,Started the day with a good run. Feeling motivated for the week ahead.,Grateful for good weather and energy to exercise,productive;active
+MW-002,2024-11-02,evening,6,5,5,4,6,work,low,Long day at work. Felt a bit overwhelmed with deadlines but managed to get through.,Grateful for supportive coworkers,tired;stressed
+MW-003,2024-11-03,morning,8,8,3,2,9,exercise;socializing,high,Great weekend morning! Went cycling with friends. Feeling refreshed and happy.,Grateful for good friends and outdoor activities,happy;social;energetic
+MW-004,2024-11-04,evening,7,6,4,3,7,work;exercise,medium,Balanced day. Got in a strength workout after work which helped clear my mind.,Grateful for access to a good gym,balanced;active
+MW-005,2024-11-05,morning,5,4,6,5,5,work,low,Didn't sleep well last night. Feeling groggy and a bit anxious about upcoming presentation.,Grateful for coffee,anxious;tired
+MW-006,2024-11-06,evening,7,7,4,3,8,work;exercise,medium,Presentation went well! Relieved and celebrated with an evening run.,Grateful for preparation paying off,relieved;accomplished
+MW-007,2024-11-07,morning,8,7,3,2,8,yoga;work,medium,Started with yoga which set a calm tone for the day. Feeling centered.,Grateful for morning quiet time,calm;mindful
+MW-008,2024-11-08,evening,4,3,7,6,4,work,low,Rough day. Project hit unexpected issues. Couldn't focus well due to poor sleep.,Need to prioritize rest this weekend,frustrated;exhausted
+MW-009,2024-11-09,morning,8,8,2,2,9,exercise;socializing,high,Saturday morning run followed by brunch with friends. Perfect recovery day.,Grateful for weekends and good company,rejuvenated;happy;social
+MW-010,2024-11-10,evening,7,6,3,2,8,exercise;relaxation,medium,Relaxing Sunday with some swimming and reading. Feeling ready for the week.,Grateful for rest days,relaxed;content
+MW-011,2024-11-11,morning,6,5,5,4,7,work,medium,Monday blues but manageable. Set clear priorities for the week.,Grateful for a fresh start,focused;determined
+MW-012,2024-11-12,evening,7,7,4,3,8,work;exercise,medium,Good cycling session after work. Endorphins definitely helped mood.,Grateful for evening light,energized;positive
+MW-013,2024-11-13,morning,7,6,4,3,7,work;exercise,medium,Steady day. Strength training in the morning is becoming a good habit.,Grateful for routine,consistent;motivated
+MW-014,2024-11-14,evening,5,4,6,5,5,work,low,Skipped workout due to late meeting. Feeling drained and a bit irritable.,Need to protect exercise time,drained;frustrated
+MW-015,2024-11-15,morning,7,7,3,3,8,work;exercise,medium,Good morning run reset my mood. Lab results came back mostly positive.,Grateful for good health,optimistic;healthy
+MW-016,2024-11-16,afternoon,9,8,2,1,9,hiking;socializing,high,Amazing day hiking with family. Beautiful weather and quality time together.,Grateful for family and nature,joyful;connected;outdoors
+MW-017,2024-11-17,evening,6,5,4,3,6,relaxation,low,Quiet Sunday recovering from yesterday's hike. Feeling content but tired.,Grateful for rest,tired;peaceful
+MW-018,2024-11-18,morning,7,6,4,3,7,work;exercise,medium,Back to routine. Morning run helped transition into work mode.,Grateful for healthy habits,focused;routine
+MW-019,2024-11-19,evening,7,6,3,2,7,yoga;work,medium,Yoga class was exactly what I needed. Feeling more flexible mentally too.,Grateful for mindfulness practice,centered;flexible
+MW-020,2024-11-20,morning,5,4,6,5,5,work,low,Poor sleep again. Noticed pattern - stress from work projects affecting rest.,Need to address work-life balance,tired;stressed;reflective
+MW-021,2024-11-21,evening,8,7,3,2,8,work;exercise;socializing,high,Great day! Finished major project and celebrated with cycling and dinner with friends.,Grateful for accomplishment and friendship,accomplished;celebratory;social
+MW-022,2024-11-22,morning,7,6,4,3,7,work;exercise,medium,Post-project calm. Strength training felt strong today.,Grateful for progress,steady;strong
+MW-023,2024-11-23,afternoon,6,5,4,4,6,relaxation,low,Lazy Saturday. Sometimes needed but feeling a bit restless by evening.,Grateful for downtime even when restless,restless;recovering
+MW-024,2024-11-24,morning,9,9,2,1,9,exercise;socializing,high,Long run personal best! Feeling incredibly accomplished and energized.,Grateful for health and fitness progress,elated;accomplished;proud
+MW-025,2024-11-25,evening,7,6,3,2,8,work;exercise,medium,Riding high from yesterday. Swimming was refreshing. Good start to holiday week.,Grateful for momentum,positive;motivated
+MW-026,2024-11-26,morning,6,5,5,4,6,work,medium,Pre-holiday work crunch. Managing stress with deep breathing throughout day.,Grateful for coping strategies,managing;aware
+MW-027,2024-11-27,evening,7,6,4,3,7,work;yoga,medium,Last work day before holiday. Yoga helped decompress. Looking forward to break.,Grateful for upcoming time off,anticipatory;calm
+MW-028,2024-11-28,afternoon,8,7,2,2,8,socializing;relaxation,high,Thanksgiving with family. Good food and conversation. Feeling grateful and connected.,Grateful for family health and togetherness,grateful;happy;connected
+MW-029,2024-11-29,morning,7,6,3,2,7,relaxation;exercise,medium,Recovery day after holiday eating. Light workout felt good. No work stress.,Grateful for long weekend,relaxed;recovering
+MW-030,2024-11-30,evening,8,8,2,2,9,exercise;socializing,high,Active day with cycling and catching up with old friend. Great conversations.,Grateful for lasting friendships,connected;energetic;happy
+MW-031,2024-12-01,morning,7,6,4,3,8,exercise;work,medium,Back to normal schedule. Strength training was solid. Ready for December.,Grateful for new month fresh start,determined;focused
+MW-032,2024-12-02,evening,5,4,6,5,5,work,low,Heavy workload returning. Didn't make time for exercise which I'm regretting.,Need to maintain balance even when busy,overwhelmed;regretful
+MW-033,2024-12-03,morning,7,7,4,3,8,work;exercise,medium,Made exercise a priority today. Morning run cleared my head before busy day.,Grateful for discipline,balanced;proactive
+MW-034,2024-12-04,evening,6,5,5,4,6,work,medium,Moderate day. Some stress but managing. Looking forward to swimming tomorrow.,Grateful for looking forward to things,coping;hopeful
+MW-035,2024-12-05,morning,7,6,4,3,7,exercise;work,medium,Morning swim was perfect. Feeling more resilient to work stress lately.,Grateful for growth in handling stress,resilient;growing

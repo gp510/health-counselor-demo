@@ -1,0 +1,3 @@
+solace-agent-mesh~=1.8.4
+solace-pubsubplus>=1.10.0  # For event streaming with Solace Cloud
+certifi>=2023.0.0  # CA certificates for TLS connections to Solace Cloud

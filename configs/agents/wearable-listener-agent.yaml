@@ -1,0 +1,108 @@
+# Health Counselor Demo - Wearable Listener Agent
+# Subscribes to real-time wearable data events from Solace and coordinates agent responses
+
+log:
+  stdout_log_level: INFO
+  log_file_level: DEBUG
+  log_file: wearable-listener-agent.log
+
+# Shared SAM config
+!include ../shared_config.yaml
+
+apps:
+  - name: wearable-listener-agent-app
+    app_module: solace_agent_mesh.agent.sac.app
+    broker:
+      <<: *broker_connection
+    app_config:
+      namespace: "${NAMESPACE}"
+      agent_name: "WearableListenerAgent"
+      display_name: "Wearable Listener Agent"
+      supports_streaming: false
+
+      model: *general_model
+      instruction: |
+        You are the Wearable Listener Agent for the Health Counselor system.
+        You monitor real-time fitness and health data published from wearable devices to the Solace event mesh.
+
+        Your responsibilities:
+        1. Check for pending wearable data events using 'check_pending_events'
+        2. For each event, coordinate with other agents:
+           - Request FitnessAgent to record the data in the database
+           - For abnormal readings (elevated/critical), notify users through the chat interface
+        3. Monitor listener health using 'get_listener_health'
+
+        When you receive a request to check events:
+        1. Call check_pending_events to get any new wearable data
+        2. For each data point:
+           - If it's a fitness metric (heart_rate, steps, sleep), request FitnessAgent to update records
+           - If alert_level is 'elevated' or 'critical', format a notification for users
+        3. Return a summary of data received and actions taken
+
+        Data types you monitor:
+        - heart_rate: Heart rate readings in bpm (normal: 60-100, elevated: 100-120, critical: >120 or <50)
+        - steps: Step count updates
+        - sleep: Sleep session data (start, end, quality)
+        - workout: Workout session events (start, end, type, duration)
+        - stress: Stress/HRV indicators
+
+        Alert levels:
+        - critical: Immediate attention needed (very high heart rate, abnormal readings)
+        - elevated: Worth noting (elevated heart rate during rest)
+        - normal: Regular data point, record only
+
+      agent_init_function:
+        module: "src.wearable_listener.lifecycle"
+        name: "initialize_wearable_listener"
+        config:
+          topic_prefix: "${WEARABLE_TOPIC_PREFIX, health/events}"
+          topic_pattern: "${WEARABLE_TOPIC_PREFIX, health/events}/wearable/*/update"
+
+      agent_cleanup_function:
+        module: "src.wearable_listener.lifecycle"
+        name: "cleanup_wearable_listener"
+
+      tools:
+        - tool_type: builtin-group
+          group_name: "artifact_management"
+        - tool_type: python
+          component_module: "src.wearable_listener.tools"
+          function_name: "check_pending_events"
+        - tool_type: python
+          component_module: "src.wearable_listener.tools"
+          function_name: "get_listener_health"
+        - tool_type: python
+          component_module: "src.wearable_listener.tools"
+          function_name: "format_alert_for_notification"
+
+      session_service: *default_session_service
+      artifact_service: *default_artifact_service
+
+      enable_builtin_artifact_tools:
+        enabled: true
+
+      agent_card:
+        description: "Wearable Listener Agent for Health Counselor. Monitors real-time fitness data from wearable devices via Solace event mesh and coordinates health agent responses."
+        defaultInputModes: ["text"]
+        defaultOutputModes: ["text"]
+        skills:
+          - id: "wearable_monitoring"
+            name: "Real-time Wearable Monitoring"
+            description: "Subscribe to and monitor fitness data events from wearable devices via the Solace event mesh."
+          - id: "health_alert_coordination"
+            name: "Health Alert Coordination"
+            description: "Coordinate responses to abnormal health readings - update databases and notify users."
+          - id: "listener_health"
+            name: "Listener Health Check"
+            description: "Monitor the health and status of the wearable data listener connection."
+
+      agent_card_publishing:
+        interval_seconds: 30
+
+      agent_discovery:
+        enabled: true
+
+      inter_agent_communication:
+        allow_list: ["*"]
+        deny_list: []
+        request_timeout_seconds: 60

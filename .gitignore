@@ -1,0 +1,49 @@
+# Presentation materials (not part of main project)
+presentation/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv/
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+
+# Databases
+*.db
+
+# Logs
+*.log
+health_notifications.log
+notifications.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Local cache/config
+.sam/
+.claude/
+
+# Misc
+=*

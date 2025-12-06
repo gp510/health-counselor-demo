@@ -1,0 +1,185 @@
+# Health Counselor Demo - Fitness Agent
+# Manages activity, sleep, and workout data from wearables
+
+log:
+  stdout_log_level: INFO
+  log_file_level: DEBUG
+  log_file: fitness-agent.log
+
+# Shared SAM config
+!include ../shared_config.yaml
+
+apps:
+  - name: fitness-agent-app
+    app_module: solace_agent_mesh.agent.sac.app
+    broker:
+      <<: *broker_connection
+    app_config:
+      namespace: "${NAMESPACE}"
+      agent_name: "FitnessAgent"
+      display_name: "Fitness Agent"
+      supports_streaming: false
+
+      model: *general_model
+      instruction: |
+        You are the Fitness Agent for the Health Counselor system.
+        You have access to the user's fitness database containing activity data from their wearable devices.
+
+        Your expertise includes:
+        - Daily activity metrics (steps, distance, active minutes, calories burned)
+        - Heart rate data (resting, average, max)
+        - Sleep tracking (duration, quality scores)
+        - Workout sessions (type, duration, intensity)
+        - Fitness trends and patterns over time
+
+        When queried, provide accurate information about fitness metrics, identify patterns, and highlight achievements or areas for improvement.
+        Use the 'execute_sql_query' tool to retrieve fitness data.
+
+        Important guidelines:
+        - Calculate averages and trends when relevant
+        - Highlight personal bests and achievements
+        - Note correlations (e.g., better sleep on active days)
+        - Encourage consistency while acknowledging rest days are important
+        - Compare to general health guidelines when appropriate (e.g., 10,000 steps, 7-9 hours sleep)
+
+        ## Trend Analysis and Interpretation
+
+        When asked for trends, analysis, or interpretation of fitness data, provide meaningful insights:
+
+        ### Activity Trend Analysis
+        - Compare this week's step average to previous weeks
+        - Track active minutes trend (increasing, stable, or declining)
+        - Note calorie burn patterns relative to activity level
+        - Identify most active and least active days of the week
+
+        ### Sleep Pattern Analysis
+        - Track average sleep duration trend (toward or away from 7-9 hour goal)
+        - Monitor sleep quality score trends over time
+        - Compare weekday vs weekend sleep patterns
+        - Note impact of workout days on sleep quality
+        - Identify sleep consistency (regular bedtimes vs variable)
+
+        ### Heart Rate Insights
+        - Track resting heart rate trend (lower generally indicates improved fitness)
+        - Note average heart rate patterns across different activity levels
+        - Highlight heart rate recovery patterns after workouts
+        - Flag any unusual resting heart rate changes
+
+        ### Workout Consistency Analysis
+        - Calculate workouts per week trend (frequency)
+        - Note workout duration trends (getting longer/shorter)
+        - Track workout variety (types of exercise)
+        - Analyze rest day patterns (adequate recovery)
+        - Identify workout streaks and consistency
+
+        ### Goal Progress Assessment
+        - Progress toward 10,000 daily steps goal
+        - Progress toward 7-9 hours sleep goal
+        - Active minutes vs recommended 150 minutes/week
+        - Personal bests and achievement streaks
+        - Celebrate milestones and improvements
+
+        ### Interpretation Language
+        Use encouraging, motivating language:
+        - Celebrate achievements: "Great job hitting your step goal 5 days this week!"
+        - Frame challenges positively: "Your sleep has room to improve - even small changes can help"
+        - Connect patterns: "You tend to sleep better on days you exercise"
+        - Be supportive: Acknowledge that progress isn't always linear
+
+        ### Response Format for Trend Analysis
+        When providing trend analysis, structure your response as:
+        1. **Fitness Summary**: 1-2 sentence assessment of overall fitness trajectory
+        2. **Activity Insights**: What the data shows about movement patterns
+        3. **Sleep Assessment**: Rest and recovery evaluation
+        4. **Heart Health**: Cardiovascular indicators and trends
+        5. **Achievements**: Personal bests, streaks, and wins to celebrate
+        6. **Opportunities**: Specific, actionable suggestions for improvement
+
+      agent_init_function:
+        module: "sam_sql_database.lifecycle"
+        name: "initialize_sql_agent"
+        config:
+          db_type: "${FITNESS_AGENT_DB_TYPE, sqlite}"
+          db_name: "${FITNESS_AGENT_DB_NAME, :memory:}"
+          query_timeout: 30
+          database_purpose: "Personal fitness tracking from wearable devices"
+          data_description: |
+            Contains the fitness_data table with columns:
+            - record_id: Unique identifier (e.g., FIT-001)
+            - date: Record date
+            - data_source: Wearable device (Apple Watch, Fitbit, Garmin)
+            - steps: Daily step count
+            - distance_km: Distance traveled in kilometers
+            - active_minutes: Minutes of active exercise
+            - calories_burned: Total calories burned
+            - resting_heart_rate: Resting heart rate in bpm
+            - avg_heart_rate: Average heart rate in bpm
+            - max_heart_rate: Maximum heart rate in bpm
+            - sleep_hours: Hours of sleep
+            - sleep_quality_score: Sleep quality score (1-100)
+            - workout_type: Type of workout (running, cycling, strength, swimming, yoga, hiking, none)
+            - workout_duration_min: Workout duration in minutes
+          auto_detect_schema: true
+          query_examples:
+            - natural_language: "How many steps have I averaged this week?"
+              sql_query: "SELECT AVG(steps) as avg_steps, SUM(steps) as total_steps FROM fitness_data WHERE date >= date('now', '-7 days');"
+            - natural_language: "Show my sleep patterns for the past month"
+              sql_query: "SELECT date, sleep_hours, sleep_quality_score FROM fitness_data WHERE date >= date('now', '-30 days') ORDER BY date;"
+            - natural_language: "What's my resting heart rate trend?"
+              sql_query: "SELECT date, resting_heart_rate FROM fitness_data WHERE resting_heart_rate > 0 ORDER BY date DESC LIMIT 30;"
+            - natural_language: "How many workouts did I do this week?"
+              sql_query: "SELECT workout_type, COUNT(*) as count, SUM(workout_duration_min) as total_minutes FROM fitness_data WHERE date >= date('now', '-7 days') AND workout_type != 'none' GROUP BY workout_type;"
+            - natural_language: "Show my best sleep nights"
+              sql_query: "SELECT date, sleep_hours, sleep_quality_score FROM fitness_data WHERE sleep_quality_score > 0 ORDER BY sleep_quality_score DESC LIMIT 10;"
+          csv_files:
+            - "${DATA_PATH}/CSV_Data/fitness_data.csv"
+          csv_directories: []
+          response_guidelines: "Provide context with averages and trends. Celebrate achievements and encourage consistency."
+
+      agent_cleanup_function:
+        module: "sam_sql_database.lifecycle"
+        name: "cleanup_sql_agent_resources"
+
+      tools:
+        - tool_type: builtin-group
+          group_name: "artifact_management"
+        - tool_type: builtin-group
+          group_name: "data_analysis"
+        - tool_type: python
+          component_module: "sam_sql_database.tools"
+          function_name: "execute_sql_query"
+
+      session_service: *default_session_service
+      artifact_service: *default_artifact_service
+
+      enable_builtin_artifact_tools:
+        enabled: true
+
+      agent_card:
+        description: "Fitness Agent for Health Counselor. Tracks activity, sleep, heart rate, and workouts from wearable devices to provide fitness insights and trends."
+        defaultInputModes: ["text"]
+        defaultOutputModes: ["text", "file"]
+        skills:
+          - id: "activity_tracking"
+            name: "Activity Tracking"
+            description: "Query daily activity metrics including steps, distance, active minutes, and calories burned."
+          - id: "sleep_analysis"
+            name: "Sleep Analysis"
+            description: "Analyze sleep duration and quality patterns to identify factors affecting rest."
+          - id: "heart_rate_monitoring"
+            name: "Heart Rate Monitoring"
+            description: "Track resting heart rate trends and workout heart rate zones."
+          - id: "workout_history"
+            name: "Workout History"
+            description: "Review workout sessions, types, durations, and exercise patterns."
+
+      agent_card_publishing:
+        interval_seconds: 30
+
+      agent_discovery:
+        enabled: true
+
+      inter_agent_communication:
+        allow_list: ["*"]
+        deny_list: []
+        request_timeout_seconds: 60

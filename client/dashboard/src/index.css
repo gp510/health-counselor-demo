@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/* Health Dashboard Theme */
+@theme {
+  /* Health status colors */
+  --color-health-excellent: #22c55e;
+  --color-health-good: #84cc16;
+  --color-health-caution: #eab308;
+  --color-health-warning: #f97316;
+  --color-health-critical: #ef4444;
+
+  /* Domain colors */
+  --color-domain-biomarkers: #ec4899;
+  --color-domain-fitness: #22c55e;
+  --color-domain-diet: #f97316;
+  --color-domain-mental: #8b5cf6;
+  --color-domain-weather: #06b6d4;
+
+  /* Background colors */
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-bg-card: #334155;
+  --color-bg-hover: #475569;
+
+  /* Text colors */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+}
+
+/* Base styles */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-hover);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Shimmer animation for loading states */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
+}

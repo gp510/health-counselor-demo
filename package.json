@@ -1,0 +1,13 @@
+{
+  "name": "health-counselor-mcp-servers",
+  "version": "1.0.0",
+  "description": "MCP server dependencies for Health Counselor Demo",
+  "private": true,
+  "dependencies": {
+    "healthcare-mcp": "^1.0.0",
+    "@modelcontextprotocol/server-time": "^0.6.2"
+  },
+  "scripts": {
+    "postinstall": "echo 'MCP servers installed. Use npx to run them via SAM agent configs.'"
+  }
+}
