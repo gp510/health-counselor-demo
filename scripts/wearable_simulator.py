@@ -166,9 +166,14 @@ def create_messaging_service():
 
     # For Solace Cloud (wss://), configure TLS
     if broker_url.startswith("wss://"):
-        tls_strategy = TLS.create().without_certificate_validation()
+        dev_mode = os.getenv("SOLACE_DEV_MODE", "false").lower() == "true"
+        if dev_mode:
+            print("[WARNING] TLS certificate validation DISABLED - development mode only!")
+            tls_strategy = TLS.create().without_certificate_validation()
+        else:
+            tls_strategy = TLS.create()
         builder = builder.with_transport_security_strategy(tls_strategy)
-        print("[INFO] TLS enabled (development mode)")
+        print("[INFO] TLS enabled" + (" (insecure dev mode)" if dev_mode else ""))
 
     # Create messaging service
     messaging_service = builder.build()
@@ -251,10 +256,8 @@ def create_health_event(
         "message": message,
         "source_device": source_device,
         "source": "simulator",
+        "metadata": metadata if metadata else {},
     }
-
-    if metadata:
-        event["metadata"] = metadata
 
     return event
 

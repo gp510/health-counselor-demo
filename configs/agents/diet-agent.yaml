@@ -18,7 +18,7 @@ apps:
       namespace: "${NAMESPACE}"
       agent_name: "DietAgent"
       display_name: "Diet Agent"
-      supports_streaming: false
+      supports_streaming: true
 
       model: *general_model
       instruction: |

@@ -18,7 +18,7 @@ apps:
       namespace: "${NAMESPACE}"
       agent_name: "MentalWellnessAgent"
       display_name: "Mental Wellness Agent"
-      supports_streaming: false
+      supports_streaming: true
 
       model: *general_model
       instruction: |

@@ -24,10 +24,8 @@ const levelStyles: Record<AlertLevel, { bg: string; border: string; icon: string
 };
 
 export function AlertBanner({ alerts, onDismiss }: AlertBannerProps) {
-  // Only show non-dismissed critical/warning alerts
-  const activeAlerts = alerts.filter(
-    (a) => !a.dismissed && (a.level === 'critical' || a.level === 'warning')
-  );
+  // Show all non-dismissed alerts (info, warning, critical)
+  const activeAlerts = alerts.filter((a) => !a.dismissed);
 
   if (activeAlerts.length === 0) {
     return null;

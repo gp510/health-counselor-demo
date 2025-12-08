@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import type { HealthSummary, HealthAlert, DietEntry } from './types/health';
 import { useHealthData } from './hooks/useHealthData';
+import { useAlertStream } from './hooks/useAlertStream';
 
 // Layout components
 import { Header } from './components/layout/Header';
@@ -31,15 +32,28 @@ function App() {
     refresh,
   } = useHealthData(30000); // Refresh every 30 seconds
 
+  // Connect to SSE stream for real-time automation alerts
+  const { sseAlerts, clearAlert: clearSSEAlert } = useAlertStream();
+
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set());
   const [refreshing, setRefreshing] = useState(false);
 
-  // Filter out dismissed alerts
+  // Merge SSE alerts with polled alerts, filter out dismissed
   const alerts: HealthAlert[] = useMemo(() => {
-    return fetchedAlerts
-      .filter(a => !dismissedAlerts.has(a.id))
-      .map(a => ({ ...a, dismissed: false }));
-  }, [fetchedAlerts, dismissedAlerts]);
+    // SSE alerts come first (real-time), then polled alerts
+    const allAlerts = [
+      ...sseAlerts,
+      ...fetchedAlerts.map(a => ({ ...a, dismissed: false })),
+    ];
+
+    // Filter out dismissed and deduplicate by ID
+    const seen = new Set<string>();
+    return allAlerts.filter(a => {
+      if (dismissedAlerts.has(a.id) || seen.has(a.id)) return false;
+      seen.add(a.id);
+      return true;
+    });
+  }, [sseAlerts, fetchedAlerts, dismissedAlerts]);
 
   // Get today's diet entries (most recent date in the data)
   const todayDiet: DietEntry[] = useMemo(() => {
@@ -90,6 +104,8 @@ function App() {
 
   const handleDismissAlert = (alertId: string) => {
     setDismissedAlerts(prev => new Set([...prev, alertId]));
+    // Also clear from SSE alerts
+    clearSSEAlert(alertId);
   };
 
   return (
