@@ -32,7 +32,8 @@ from solace.messaging.config.transport_security_strategy import TLS
 load_dotenv()
 
 # Wearable device sources
-WEARABLE_DEVICES = ["Apple Watch", "Fitbit Charge 5", "Garmin Venu", "Samsung Galaxy Watch"]
+# WEARABLE_DEVICES = ["Apple Watch", "Fitbit Charge 5", "Garmin Venu", "Samsung Galaxy Watch"]
+WEARABLE_DEVICES = ["Apple Watch"]
 
 # Health data specifications
 HEALTH_DATA_SPECS = {
