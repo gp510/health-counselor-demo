@@ -131,6 +131,20 @@ sam run configs/gateways/webui.yaml
 
 Open **http://localhost:8000** in your browser.
 
+### 5. Run Evaluations (Optional)
+
+With agents running, you can sanity-check demo flows. First install the Agent Mesh CLI in your venv:
+
+```bash
+source venv/bin/activate
+pip install solace-agent-mesh
+# Required for sam eval
+pip install "sam-rest-gateway @ git+https://github.com/SolaceLabs/solace-agent-mesh-core-plugins#subdirectory=sam-rest-gateway"
+sam eval configs/evaluations/demo-scenarios.json
+```
+
+- Scenario 3 (current heart rate) expects the wearable listener plus the simulator: `python scripts/wearable_simulator.py --scenario workout --duration 60`.
+
 ## Dashboard
 
 The demo includes a React dashboard for visualizing health metrics. See [Dashboard Guide](docs/DASHBOARD.md).
@@ -183,6 +197,9 @@ See [Wearable Simulation Guide](docs/simulation-demo.md) for all scenarios.
 **WebUI not loading?**
 - Start gateway after agents are running
 - Check `FASTAPI_PORT` is available
+
+**Seeing "Missing critical info ... target_status_topic" in orchestrator logs?**
+- Restart the WebUI Gateway and orchestrator after updating configs; the gateway now publishes a status topic via `WEBUI_STATUS_TOPIC` to avoid those warnings.
 
 See [Configuration](docs/configuration.md) for detailed setup help.
 

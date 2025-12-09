@@ -52,7 +52,7 @@ export function useAlertStream(enabled: boolean = true): UseAlertStreamReturn {
   const [sseAlerts, setSSEAlerts] = useState<HealthAlert[]>([]);
   const [connected, setConnected] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectAttemptRef = useRef(0);
 
   // Track enabled state in ref to avoid recreating connect callback

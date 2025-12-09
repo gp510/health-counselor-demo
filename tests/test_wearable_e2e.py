@@ -15,6 +15,7 @@ import sys
 import json
 import tempfile
 import pytest
+import asyncio
 from pathlib import Path
 from datetime import datetime, timezone
 from unittest.mock import patch, MagicMock
@@ -45,7 +46,8 @@ from wearable_listener.tools import (
 class TestSimulatorListenerCompatibility:
     """Verify simulator output is compatible with listener input expectations."""
 
-    def test_heart_rate_event_compatibility(self):
+    @pytest.mark.asyncio
+    async def test_heart_rate_event_compatibility(self):
         """Simulator heart rate events should be processable by listener."""
         event = generate_heart_rate("resting")
 
@@ -55,10 +57,11 @@ class TestSimulatorListenerCompatibility:
         assert "alert_level" in event
 
         # Can be processed by listener's categorize function
-        alert = categorize_alert_level(event["data_type"], event["value"])
+        alert = await categorize_alert_level(event["data_type"], event["value"])
         assert alert in ["normal", "elevated", "critical"]
 
-    def test_steps_event_compatibility(self):
+    @pytest.mark.asyncio
+    async def test_steps_event_compatibility(self):
         """Simulator steps events should be processable by listener."""
         event = generate_steps_update(current_total=5000)
 
@@ -66,11 +69,12 @@ class TestSimulatorListenerCompatibility:
         assert isinstance(event["value"], int)
 
         # Can be formatted for fitness update
-        result = format_fitness_update_request(event)
+        result = await format_fitness_update_request(event)
         assert result["can_update_fitness_db"] is True
         assert result["target_column"] == "steps"
 
-    def test_sleep_event_compatibility(self):
+    @pytest.mark.asyncio
+    async def test_sleep_event_compatibility(self):
         """Simulator sleep events should be processable by listener."""
         event = generate_sleep_event(hours=7.5, quality=85)
 
@@ -79,11 +83,12 @@ class TestSimulatorListenerCompatibility:
         assert event["metadata"]["quality_score"] == 85
 
         # Can be formatted for fitness update
-        result = format_fitness_update_request(event)
+        result = await format_fitness_update_request(event)
         assert result["can_update_fitness_db"] is True
         assert result["target_column"] == "sleep_hours"
 
-    def test_workout_event_compatibility(self):
+    @pytest.mark.asyncio
+    async def test_workout_event_compatibility(self):
         """Simulator workout events should be processable by listener."""
         event = generate_workout_event(workout_type="running", duration=30)
 
@@ -92,10 +97,11 @@ class TestSimulatorListenerCompatibility:
         assert event["metadata"]["workout_type"] == "running"
 
         # Workout maps to workout_type column
-        result = format_fitness_update_request(event)
+        result = await format_fitness_update_request(event)
         assert result["target_column"] == "workout_type"
 
-    def test_stress_event_compatibility(self):
+    @pytest.mark.asyncio
+    async def test_stress_event_compatibility(self):
         """Simulator stress events should be processable by listener."""
         event = generate_stress_reading()
 
@@ -103,7 +109,7 @@ class TestSimulatorListenerCompatibility:
         assert 1 <= event["value"] <= 100
 
         # Stress has no direct DB mapping
-        result = format_fitness_update_request(event)
+        result = await format_fitness_update_request(event)
         assert result["can_update_fitness_db"] is False
 
     def test_all_event_types_have_required_fields(self):
@@ -127,7 +133,8 @@ class TestSimulatorListenerCompatibility:
 class TestAlertLevelConsistency:
     """Verify alert levels are consistent between simulator and listener."""
 
-    def test_heart_rate_alert_levels_match(self):
+    @pytest.mark.asyncio
+    async def test_heart_rate_alert_levels_match(self):
         """Simulator and listener should agree on heart rate alert levels."""
         test_cases = [
             (72, "normal"),
@@ -141,7 +148,7 @@ class TestAlertLevelConsistency:
             event = create_health_event("heart_rate", value)
 
             # Listener categorizes independently
-            listener_category = categorize_alert_level("heart_rate", value)
+            listener_category = await categorize_alert_level("heart_rate", value)
 
             # Both should classify similarly (may differ slightly in thresholds)
             # At minimum, critical should match critical
@@ -150,7 +157,8 @@ class TestAlertLevelConsistency:
                     f"HR {value}: simulator={event['alert_level']}, listener={listener_category}"
                 )
 
-    def test_stress_alert_levels_match(self):
+    @pytest.mark.asyncio
+    async def test_stress_alert_levels_match(self):
         """Simulator and listener should agree on stress alert levels."""
         test_cases = [
             (30, "normal"),
@@ -160,7 +168,7 @@ class TestAlertLevelConsistency:
 
         for value, expected_category in test_cases:
             event = create_health_event("stress", value)
-            listener_category = categorize_alert_level("stress", value)
+            listener_category = await categorize_alert_level("stress", value)
 
             # Critical stress should match
             if expected_category == "critical":
@@ -274,11 +282,12 @@ class TestEventProcessingIntegration:
 class TestNotificationFormatIntegration:
     """Test notification format from simulator events."""
 
-    def test_format_simulator_event_for_user(self):
+    @pytest.mark.asyncio
+    async def test_format_simulator_event_for_user(self):
         """Simulator events should format nicely for user notification."""
         event = generate_heart_rate("critical_high")
 
-        notification = format_alert_for_notification(
+        notification = await format_alert_for_notification(
             data_type=event["data_type"],
             value=event["value"],
             unit=event["unit"],
@@ -295,11 +304,12 @@ class TestNotificationFormatIntegration:
         assert event["source_device"] in notification
         assert "🚨" in notification  # Critical emoji
 
-    def test_format_sleep_event_for_user(self):
+    @pytest.mark.asyncio
+    async def test_format_sleep_event_for_user(self):
         """Sleep events should format with quality information."""
         event = generate_sleep_event(hours=4, quality=45)
 
-        notification = format_alert_for_notification(
+        notification = await format_alert_for_notification(
             data_type=event["data_type"],
             value=event["value"],
             unit=event["unit"],

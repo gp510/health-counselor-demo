@@ -33,6 +33,10 @@ apps:
         - "http://localhost:3000" 
         - "http://127.0.0.1:3000"
 
+      # Status topic used by agents for task status callbacks (prevents
+      # "Missing critical info ... target_status_topic" warnings).
+      status_topic: ${WEBUI_STATUS_TOPIC, ${NAMESPACE}/a2a/v1/gateway/status/${WEBUI_GATEWAY_ID}}
+
       enable_embed_resolution: ${ENABLE_EMBED_RESOLUTION} # Enable late-stage resolution
       gateway_artifact_content_limit_bytes: ${GATEWAY_ARTIFACT_LIMIT_BYTES, 10000000} # Max size for late-stage embeds
       sse_max_queue_size: ${SSE_MAX_QUEUE_SIZE, 200} # Max size of SSE connection queues
@@ -172,4 +176,3 @@ apps:
             voice: "Kore"
             playbackRate: 1.0
             cacheTTS: true
-

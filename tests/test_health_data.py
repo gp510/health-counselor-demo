@@ -217,7 +217,7 @@ class TestCSVDataIntegrity:
 
         columns, rows = load_csv_data(csv_path)
 
-        valid_meal_types = {"breakfast", "lunch", "dinner", "snack"}
+        valid_meal_types = {"breakfast", "lunch", "dinner", "snack", "morning_coffee", "afternoon_coffee"}
         for row in rows:
             meal_type = row.get("meal_type", "").lower()
             assert meal_type in valid_meal_types, f"Invalid meal_type '{meal_type}' in {row.get('meal_id')}"

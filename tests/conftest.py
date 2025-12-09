@@ -2,12 +2,19 @@
 Pytest fixtures for Health Counselor tests.
 """
 import os
+import sys
 import csv
 import sqlite3
 import pytest
 from pathlib import Path
 from dataclasses import dataclass
 from dotenv import load_dotenv
+
+# Ensure src/ is on sys.path so tests can import wearable_listener and other modules.
+ROOT = Path(__file__).resolve().parent.parent
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
 
 # Load environment variables
 load_dotenv()

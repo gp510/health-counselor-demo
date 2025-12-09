@@ -3,17 +3,26 @@ Wearable Listener Tools.
 
 Provides tools for the WearableListenerAgent to check and process
 real-time health data from wearable devices.
+
+Follows SAM best practices:
+- All tools are async functions
+- Standard tool_context and tool_config parameters
+- Consistent return format with status field
 """
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from .lifecycle import (
     get_pending_events,
     get_wearable_listener_status,
     get_automation_status as _get_automation_status,
+    get_latest_readings,
 )
 
 
-def check_pending_events(agent_context=None) -> Dict[str, Any]:
+async def check_pending_events(
+    tool_context: Optional[Any] = None,
+    tool_config: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """
     Check for pending wearable health data events.
 
@@ -23,10 +32,11 @@ def check_pending_events(agent_context=None) -> Dict[str, Any]:
 
     Returns:
         Dict containing:
+        - status: "success" or "error"
         - events: List of pending event objects
         - count: Number of pending events
-        - status: Current listener status
         - events_by_type: Breakdown of events by data type
+        - listener_status: Current listener status
     """
     events = get_pending_events()
     status = get_wearable_listener_status()
@@ -40,6 +50,7 @@ def check_pending_events(agent_context=None) -> Dict[str, Any]:
         events_summary[data_type].append(event)
 
     return {
+        "status": "success",
         "events": events,
         "count": len(events),
         "events_by_type": {k: len(v) for k, v in events_summary.items()},
@@ -53,7 +64,7 @@ def check_pending_events(agent_context=None) -> Dict[str, Any]:
     }
 
 
-def format_alert_for_notification(
+async def format_alert_for_notification(
     data_type: str,
     value: float,
     unit: str,
@@ -61,6 +72,8 @@ def format_alert_for_notification(
     message: str = "",
     source_device: str = "wearable",
     timestamp: str = "",
+    tool_context: Optional[Any] = None,
+    tool_config: Optional[Dict[str, Any]] = None,
 ) -> str:
     """
     Format a health alert event for user notification.
@@ -73,6 +86,8 @@ def format_alert_for_notification(
         message: Optional additional message
         source_device: Device that captured the data
         timestamp: Time of the reading
+        tool_context: SAM tool context (optional)
+        tool_config: SAM tool configuration (optional)
 
     Returns:
         Formatted notification message suitable for display to user
@@ -120,7 +135,10 @@ def format_alert_for_notification(
     return notification.strip()
 
 
-def get_listener_health(agent_context=None) -> Dict[str, Any]:
+async def get_listener_health(
+    tool_context: Optional[Any] = None,
+    tool_config: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """
     Get the health status of the wearable data listener.
 
@@ -129,19 +147,20 @@ def get_listener_health(agent_context=None) -> Dict[str, Any]:
 
     Returns:
         Dict with health status information including:
+        - status: "success" or "error"
         - healthy: Whether the listener is running properly
         - events_processed: Total events processed since startup
         - events_by_type: Breakdown of events by data type
         - last_event: Timestamp of last received event
         - pending_count: Number of events waiting to be processed
     """
-    status = get_wearable_listener_status()
+    listener_status = get_wearable_listener_status()
 
     # Determine health status
-    healthy = status.get("running", False)
-    events_processed = status.get("event_count", 0)
-    events_by_type = status.get("events_by_type", {})
-    pending = status.get("pending_events", 0)
+    healthy = listener_status.get("running", False)
+    events_processed = listener_status.get("event_count", 0)
+    events_by_type = listener_status.get("events_by_type", {})
+    pending = listener_status.get("pending_events", 0)
 
     # Build health message
     if not healthy:
@@ -152,16 +171,21 @@ def get_listener_health(agent_context=None) -> Dict[str, Any]:
         health_message = "Wearable listener is healthy and receiving data"
 
     return {
+        "status": "success",
         "healthy": healthy,
         "events_processed": events_processed,
         "events_by_type": events_by_type,
-        "last_event": status.get("last_event_time"),
+        "last_event": listener_status.get("last_event_time"),
         "pending_count": pending,
         "message": health_message,
     }
 
 
-def format_fitness_update_request(event: Dict[str, Any]) -> Dict[str, Any]:
+async def format_fitness_update_request(
+    event: Dict[str, Any],
+    tool_context: Optional[Any] = None,
+    tool_config: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """
     Format a wearable event as a fitness database update request.
 
@@ -170,6 +194,8 @@ def format_fitness_update_request(event: Dict[str, Any]) -> Dict[str, Any]:
 
     Args:
         event: The wearable health data event
+        tool_context: SAM tool context (optional)
+        tool_config: SAM tool configuration (optional)
 
     Returns:
         Dict with update parameters for FitnessAgent
@@ -191,6 +217,7 @@ def format_fitness_update_request(event: Dict[str, Any]) -> Dict[str, Any]:
     target_column = column_mapping.get(data_type)
 
     return {
+        "status": "success",
         "data_type": data_type,
         "value": value,
         "target_column": target_column,
@@ -206,7 +233,12 @@ def format_fitness_update_request(event: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def categorize_alert_level(data_type: str, value: float) -> str:
+async def categorize_alert_level(
+    data_type: str,
+    value: float,
+    tool_context: Optional[Any] = None,
+    tool_config: Optional[Dict[str, Any]] = None,
+) -> str:
     """
     Determine the alert level for a health reading.
 
@@ -216,6 +248,8 @@ def categorize_alert_level(data_type: str, value: float) -> str:
     Args:
         data_type: Type of health data
         value: The measured value
+        tool_context: SAM tool context (optional)
+        tool_config: SAM tool configuration (optional)
 
     Returns:
         Alert level string: "normal", "elevated", or "critical"
@@ -268,7 +302,10 @@ def categorize_alert_level(data_type: str, value: float) -> str:
     return "normal"
 
 
-def get_automation_status(agent_context=None) -> Dict[str, Any]:
+async def get_automation_status(
+    tool_context: Optional[Any] = None,
+    tool_config: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """
     Get the status of the wearable automation features.
 
@@ -284,8 +321,112 @@ def get_automation_status(agent_context=None) -> Dict[str, Any]:
 
     Returns:
         Dict with automation status including:
+        - status: "success" or "error"
         - wearable_listener: Connection and event processing status
         - anomaly_detector: Baselines and detection history
         - goal_tracker: Today's goal progress and achievements
     """
-    return _get_automation_status()
+    automation_data = _get_automation_status()
+    return {
+        "status": "success",
+        **automation_data,
+    }
+
+
+async def get_current_metrics(
+    tool_context: Optional[Any] = None,
+    tool_config: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    Get the most recent health metrics from wearable data.
+
+    Use this tool for queries about "current", "now", "right now",
+    "at this moment", "live", or "real-time" health data.
+
+    Returns the latest reading for each data type along with:
+    - Current value and timestamp
+    - Comparison to personal baseline (mean, std_dev)
+    - Any active anomalies detected
+    - Today's goal progress for that metric
+
+    This tool does NOT clear the pending events queue.
+
+    Returns:
+        Dict containing:
+        - status: "success", "waiting_for_data", or "listener_not_running"
+        - metrics: Latest reading for each data type with baseline comparison
+        - listener_status: Whether the wearable listener is active
+        - data_types: List of data types with current readings
+        - message: Human-readable summary of current health state
+    """
+    readings = get_latest_readings()
+    listener_status = get_wearable_listener_status()
+
+    if not readings:
+        if listener_status.get("running"):
+            return {
+                "status": "waiting_for_data",
+                "metrics": {},
+                "listener_status": listener_status,
+                "data_types": [],
+                "message": (
+                    "The wearable listener is active but hasn't received any data yet. "
+                    "Please ensure the wearable simulator is running: "
+                    "python scripts/wearable_simulator.py --scenario workout"
+                ),
+                "user_guidance": (
+                    "Your wearable connection is active but no readings have been received yet. "
+                    "This could mean your device hasn't synced recently. "
+                    "Try checking your device connection or waiting a moment for data to arrive."
+                ),
+            }
+        else:
+            return {
+                "status": "listener_not_running",
+                "metrics": {},
+                "listener_status": listener_status,
+                "data_types": [],
+                "message": (
+                    "The wearable listener agent is not currently running. "
+                    "Start it with: sam run configs/agents/wearable-listener-agent.yaml"
+                ),
+                "user_guidance": (
+                    "I'm unable to access real-time wearable data at the moment. "
+                    "The real-time monitoring service isn't currently active. "
+                    "I can still help you with historical health data from your records."
+                ),
+            }
+
+    # Build summary of current state
+    alerts = []
+    for data_type, reading in readings.items():
+        alert_level = reading.get("alert_level", "normal")
+        if alert_level in ("elevated", "critical"):
+            alerts.append(f"{data_type}: {reading.get('value')} {reading.get('unit')} ({alert_level})")
+
+        # Add baseline comparison text
+        baseline = reading.get("baseline")
+        if baseline and baseline.get("mean"):
+            mean = baseline["mean"]
+            std = baseline.get("std_dev", 0)
+            value = reading.get("value", 0)
+            if std > 0:
+                deviation = (value - mean) / std
+                reading["deviation_sigma"] = round(deviation, 1)
+                reading["vs_baseline"] = (
+                    f"{value} vs baseline {mean:.1f} ({deviation:+.1f}σ)"
+                )
+
+    message_parts = [f"Current readings for {len(readings)} metrics."]
+    if alerts:
+        message_parts.append(f"Alerts: {', '.join(alerts)}")
+    else:
+        message_parts.append("All metrics within normal range.")
+
+    return {
+        "status": "success",
+        "metrics": readings,
+        "listener_status": listener_status,
+        "data_types": list(readings.keys()),
+        "message": " ".join(message_parts),
+    }

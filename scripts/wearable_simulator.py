@@ -289,9 +289,9 @@ def generate_heart_rate(context: str = "resting") -> dict:
     elif context == "elevated":
         value = random.randint(*specs["elevated_range"])
     elif context == "critical_high":
-        value = random.randint(specs["critical_high"], specs["critical_high"] + 20)
+        value = random.randint(specs["critical_high"] + 1, specs["critical_high"] + 20)
     elif context == "critical_low":
-        value = random.randint(specs["critical_low"] - 10, specs["critical_low"])
+        value = random.randint(specs["critical_low"] - 10, specs["critical_low"] - 1)
     else:
         value = random.randint(*specs["normal_range"])
 

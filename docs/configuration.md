@@ -23,6 +23,7 @@ Create a `.env` file in the project root with these settings:
 | `SOLACE_BROKER_USERNAME` | Broker username | `solace-cloud-client` |
 | `SOLACE_BROKER_PASSWORD` | Broker password | `your-password` |
 | `SOLACE_BROKER_VPN` | Message VPN name | `your-service-name` |
+| `USE_TEMPORARY_QUEUES` | Enable temporary queues (dev) | `true` |
 
 > **Note:** Use `wss://` with port `443` for Solace Cloud. Local Docker uses `ws://` with port `8008`.
 
@@ -40,6 +41,9 @@ Create a `.env` file in the project root with these settings:
 | `FASTAPI_HOST` | Gateway bind host | `127.0.0.1` |
 | `FASTAPI_PORT` | Gateway port | `8000` |
 | `SESSION_SECRET_KEY` | Session encryption key | Generate a secure random string |
+| `WEBUI_GATEWAY_ID` | Unique gateway ID | `gdk-gateway-dev` |
+| `WEBUI_STATUS_TOPIC` | Status topic for task updates | `${NAMESPACE}/a2a/v1/gateway/status/${WEBUI_GATEWAY_ID}` |
+| `WEB_UI_GATEWAY_DATABASE_URL` | Session DB URL (if using SQL sessions) | `sqlite:///webui_gateway.db` |
 
 ### Wearable Streaming
 
@@ -69,51 +73,84 @@ NAMESPACE=health/
 FASTAPI_HOST=127.0.0.1
 FASTAPI_PORT=8000
 SESSION_SECRET_KEY=your-secret-key-here
+WEBUI_GATEWAY_ID=gdk-gateway-dev
+WEBUI_STATUS_TOPIC=health/a2a/v1/gateway/status/gdk-gateway-dev
+WEB_UI_GATEWAY_DATABASE_URL=sqlite:///webui_gateway.db
 
 # Data Path (absolute path to project)
 DATA_PATH=/path/to/health-counselor-demo
 ```
 
-## Shared Configuration
+## Shared Configuration (mirrors `configs/shared_config.yaml`)
 
-The `configs/shared_config.yaml` file uses YAML anchors to define reusable settings across all agents.
-
-### Broker Connection
+### Broker Connection (anchors)
 
 ```yaml
-broker: &default_broker
-  type: solace
-  url: ${SOLACE_BROKER_URL}
-  vpn: ${SOLACE_BROKER_VPN}
-  username: ${SOLACE_BROKER_USERNAME}
-  password: ${SOLACE_BROKER_PASSWORD}
+broker_connection: &broker_connection
+  dev_mode: ${SOLACE_DEV_MODE, false}
+  broker_url: ${SOLACE_BROKER_URL, ws://localhost:8008}
+  broker_username: ${SOLACE_BROKER_USERNAME, default}
+  broker_password: ${SOLACE_BROKER_PASSWORD, default}
+  broker_vpn: ${SOLACE_BROKER_VPN, default}
+  temporary_queue: ${USE_TEMPORARY_QUEUES, true}
 ```
 
-### LLM Models
+### LLM Models (LiteLLM-style config)
 
 ```yaml
 models:
-  planning_model: &planning_model
-    type: openai
-    name: ${LLM_SERVICE_PLANNING_MODEL_NAME}
+  planning: &planning_model
+    model: ${LLM_SERVICE_PLANNING_MODEL_NAME}
+    api_base: ${LLM_SERVICE_ENDPOINT}
+    api_key: ${LLM_SERVICE_API_KEY}
+    parallel_tool_calls: true
+    cache_strategy: "5m"
 
-  general_model: &general_model
-    type: openai
-    name: ${LLM_SERVICE_GENERAL_MODEL_NAME}
+  general: &general_model
+    model: ${LLM_SERVICE_GENERAL_MODEL_NAME}
+    api_base: ${LLM_SERVICE_ENDPOINT}
+    api_key: ${LLM_SERVICE_API_KEY}
+    cache_strategy: "5m"
+
+  # Optional models
+  image_gen: &image_generation_model
+    model: ${IMAGE_MODEL_NAME}
+    api_base: ${IMAGE_SERVICE_ENDPOINT}
+    api_key: ${IMAGE_SERVICE_API_KEY}
+
+  report_gen: &report_generation_model
+    model: ${LLM_REPORT_MODEL_NAME}
+    api_base: ${LLM_SERVICE_ENDPOINT}
+    api_key: ${LLM_SERVICE_API_KEY}
 ```
 
 ### Services
 
 ```yaml
 services:
-  session: &session_service
-    type: builtin
+  session_service: &default_session_service
+    type: "memory"
+    default_behavior: "PERSISTENT"
 
-  artifact: &artifact_service
-    type: filesystem
-    path: /tmp/samv2
-    scope: namespace
+  artifact_service: &default_artifact_service
+    type: "filesystem"
+    base_path: "/tmp/samv2"
+    artifact_scope: namespace
+
+  data_tools_config: &default_data_tools_config
+    sqlite_memory_threshold_mb: 100
+    max_result_preview_rows: 50
+    max_result_preview_bytes: 4096
 ```
+
+## Production .env Notes
+
+Use the development template above as a base and adjust:
+
+- Set `SOLACE_BROKER_URL`/VPN/user/pass to your production broker.
+- Use strong `SESSION_SECRET_KEY`.
+- Consider SQL-backed session services: set `WEB_UI_GATEWAY_DATABASE_URL` (gateway) and `ORCHESTRATOR_DATABASE_URL` (orchestrator) to production-grade databases.
+- Set `WEBUI_STATUS_TOPIC` to a namespaced, non-dev value to keep orchestrator status logs clean.
 
 ## Agent Configuration Structure
 

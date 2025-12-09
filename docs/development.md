@@ -191,6 +191,19 @@ DATA_PATH="$(pwd)" pytest tests/test_health_queries.py -v
 DATA_PATH="$(pwd)" pytest tests/ --cov=src
 ```
 
+### Running Evaluations (Agent Mesh)
+
+With agents running, you can sanity-check demo flows via the evaluation suite:
+
+```bash
+pip install solace-agent-mesh
+# Required for sam eval
+pip install "sam-rest-gateway @ git+https://github.com/SolaceLabs/solace-agent-mesh-core-plugins#subdirectory=sam-rest-gateway"
+sam eval configs/evaluations/demo-scenarios.json
+```
+
+- Scenario 3 requires the wearable listener plus the simulator: `python scripts/wearable_simulator.py --scenario workout --duration 60`.
+
 ### Writing Tests
 
 ```python

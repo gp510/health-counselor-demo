@@ -11,9 +11,11 @@ Includes:
 """
 
 import os
+import copy
 import json
 import logging
 import httpx
+import sqlite3
 from typing import Any, Dict, Optional
 from datetime import datetime, timezone
 
@@ -30,6 +32,91 @@ logger = logging.getLogger(__name__)
 
 # Dashboard API URL for publishing alerts
 DASHBOARD_API_URL = os.getenv("DASHBOARD_API_URL", "http://localhost:8082")
+
+# Fitness database path for real-time updates
+FITNESS_DB_PATH = os.getenv("FITNESS_AGENT_DB_NAME", "")
+
+
+def update_fitness_database(data_type: str, value: float, timestamp: str) -> bool:
+    """
+    Update the fitness database with real-time wearable data.
+
+    Creates or updates today's record with the latest values from the wearable.
+    This enables the FitnessAgent to return real-time data when queried.
+
+    Args:
+        data_type: Type of data (heart_rate, steps, sleep, etc.)
+        value: The measured value
+        timestamp: ISO timestamp of the reading
+
+    Returns:
+        True if update was successful
+    """
+    if not FITNESS_DB_PATH or FITNESS_DB_PATH == ":memory:":
+        logger.debug("[FITNESS DB] No shared fitness database configured")
+        return False
+
+    # Map wearable data types to fitness_data columns
+    column_mapping = {
+        "heart_rate": "avg_heart_rate",
+        "steps": "steps",
+        "sleep": "sleep_hours",
+        "workout": "workout_type",
+    }
+
+    column = column_mapping.get(data_type)
+    if not column:
+        logger.debug(f"[FITNESS DB] No column mapping for {data_type}")
+        return False
+
+    try:
+        # Parse date from timestamp
+        try:
+            dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+            today = dt.strftime("%Y-%m-%d")
+        except (ValueError, AttributeError):
+            today = datetime.now().strftime("%Y-%m-%d")
+
+        conn = sqlite3.connect(FITNESS_DB_PATH)
+        cursor = conn.cursor()
+
+        # Check if today's record exists
+        cursor.execute(
+            "SELECT record_id FROM fitness_data WHERE date = ?",
+            (today,)
+        )
+        existing = cursor.fetchone()
+
+        if existing:
+            # Update existing record with real-time data
+            # For heart rate, update avg_heart_rate (we track most recent)
+            # For steps, the value is cumulative so just update
+            cursor.execute(
+                f"UPDATE fitness_data SET {column} = ? WHERE date = ?",
+                (value, today)
+            )
+            logger.info(f"[FITNESS DB] Updated {column}={value} for {today}")
+        else:
+            # No record exists for today - skip insertion
+            # Wearable data supplements existing daily records, it doesn't create new ones
+            # Creating records with zeros causes "all zeros" display issues in the dashboard
+            logger.debug(
+                f"[FITNESS DB] No record for {today}, skipping {column}={value} "
+                "(wearable data supplements existing records only)"
+            )
+            conn.close()
+            return False
+
+        conn.commit()
+        conn.close()
+        return True
+
+    except sqlite3.Error as e:
+        logger.error(f"[FITNESS DB] Database error: {e}")
+        return False
+    except Exception as e:
+        logger.error(f"[FITNESS DB] Error updating fitness database: {e}")
+        return False
 
 
 class WearableListenerState:
@@ -50,6 +137,8 @@ class WearableListenerState:
             "workout": 0,
             "stress": 0,
         }
+        # Track latest reading per data type for real-time queries
+        self.latest_readings: Dict[str, Dict[str, Any]] = {}
 
 
 # Global state for the wearable listener
@@ -269,6 +358,10 @@ def process_wearable_data(event: Dict[str, Any], agent_context) -> None:
                 goal_target=goal_event.target_value,
             )
 
+        # Update shared fitness database with real-time data
+        timestamp = event.get("timestamp", datetime.now(timezone.utc).isoformat())
+        update_fitness_database(data_type, numeric_value, timestamp)
+
     # Enrich event with anomaly/goal metadata before storing
     enriched_event = event.copy()
     if anomaly_result and anomaly_result.detected:
@@ -285,6 +378,21 @@ def process_wearable_data(event: Dict[str, Any], agent_context) -> None:
             "type": goal_event.event_type,
             "goal_name": goal_event.goal_name,
             "progress_percent": goal_event.progress_percent,
+        }
+
+    # Store latest reading for real-time queries (always update, don't clear)
+    if numeric_value is not None:
+        timestamp = event.get("timestamp", datetime.now(timezone.utc).isoformat())
+        baseline = anomaly_detector.get_baseline(data_type)
+        _state.latest_readings[data_type] = {
+            "value": numeric_value,
+            "unit": event.get("unit", ""),
+            "timestamp": timestamp,
+            "alert_level": alert_level,
+            "source_device": event.get("source_device", "wearable"),
+            "baseline": baseline,
+            "anomaly": enriched_event.get("anomaly"),
+            "goal_progress": enriched_event.get("goal_event"),
         }
 
     # Store enriched event for agent processing
@@ -472,6 +580,26 @@ def get_pending_events() -> list:
         return events
 
     return []
+
+
+def get_latest_readings() -> Dict[str, Dict[str, Any]]:
+    """
+    Get the latest reading for each data type.
+
+    Returns a dictionary mapping data type to the most recent reading.
+    Each reading includes:
+    - value: The measured value
+    - unit: Unit of measurement
+    - timestamp: When the reading was taken
+    - alert_level: normal, elevated, or critical
+    - baseline: Personal baseline stats (mean, std_dev, etc.)
+    - anomaly: Anomaly info if detected, otherwise None
+    - goal_progress: Goal event info if applicable, otherwise None
+
+    This does NOT clear the pending events queue.
+    """
+    global _state
+    return copy.deepcopy(_state.latest_readings)
 
 
 def get_anomaly_status() -> Dict[str, Any]:

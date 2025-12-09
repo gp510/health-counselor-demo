@@ -1,0 +1,13 @@
+{
+  "test_case_id": "scenario3_current_heart_rate",
+  "query": "What's my current heart rate?",
+  "target_agent": "HealthCounselorOrchestrator",
+  "category": "realtime",
+  "description": "Real-time heart rate via wearable listener",
+  "wait_time": 45,
+  "artifacts": [],
+  "evaluation": {
+    "expected_tools": [],
+    "expected_response": "heart rate"
+  }
+}

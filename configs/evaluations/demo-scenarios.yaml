@@ -1,0 +1,31 @@
+tests:
+  - name: scenario1_latest_cholesterol
+    description: Basic single-agent biomarker query should return latest cholesterol values.
+    input: "What are my latest cholesterol levels?"
+    expected:
+      contains:
+        - "cholesterol"
+        - "LDL"
+        - "HDL"
+
+  - name: scenario2_afternoon_fatigue
+    description: Cross-domain fatigue analysis should mirror demo script structure (factors + recommendations, no artifacts).
+    input: "Why am I always tired in the afternoons?"
+    expected:
+      contains:
+        - "Contributing Factors"
+        - "Recommendations"
+        - "sleep"
+        - "stress"
+        - "vitamin"
+
+  - name: scenario3_current_heart_rate
+    description: Real-time heart rate should be reported when wearable simulator is running.
+    preconditions:
+      - "Start wearable listener agent"
+      - "Run: python scripts/wearable_simulator.py --scenario workout --duration 60"
+    input: "What's my current heart rate?"
+    expected:
+      contains:
+        - "heart rate"
+        - "bpm"

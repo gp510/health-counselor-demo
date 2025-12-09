@@ -1,0 +1,13 @@
+{
+  "test_case_id": "scenario1_latest_cholesterol",
+  "query": "What are my latest cholesterol levels?",
+  "target_agent": "HealthCounselorOrchestrator",
+  "category": "biomarker",
+  "description": "Single-agent biomarker query",
+  "wait_time": 30,
+  "artifacts": [],
+  "evaluation": {
+    "expected_tools": [],
+    "expected_response": "cholesterol"
+  }
+}

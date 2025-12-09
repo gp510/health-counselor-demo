@@ -1,3 +1,4 @@
+import ReactMarkdown from 'react-markdown';
 import type { ChatMessage as ChatMessageType } from '../../types/health';
 
 interface ChatMessageProps {
@@ -25,7 +26,13 @@ export function ChatMessage({ message }: ChatMessageProps) {
         )}
 
         {/* Message content */}
-        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+        {isUser ? (
+          <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+        ) : (
+          <div className="text-sm markdown-content">
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+          </div>
+        )}
 
         {/* Timestamp */}
         <p

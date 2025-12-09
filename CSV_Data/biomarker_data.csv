@@ -1,35 +1,40 @@
 test_id,test_date,test_type,biomarker_name,value,unit,reference_range_low,reference_range_high,status,lab_source,notes
-BIO-001,2024-06-15,blood_panel,Glucose (Fasting),95,mg/dL,70,100,normal,LabCorp,Fasting sample
-BIO-002,2024-06-15,blood_panel,HbA1c,5.4,%,4.0,5.6,normal,LabCorp,
-BIO-003,2024-06-15,lipid_panel,Total Cholesterol,195,mg/dL,0,200,normal,LabCorp,
-BIO-004,2024-06-15,lipid_panel,LDL Cholesterol,118,mg/dL,0,100,high,LabCorp,Slightly elevated
-BIO-005,2024-06-15,lipid_panel,HDL Cholesterol,58,mg/dL,40,60,normal,LabCorp,
-BIO-006,2024-06-15,lipid_panel,Triglycerides,142,mg/dL,0,150,normal,LabCorp,
-BIO-007,2024-06-15,vitamin,Vitamin D,28,ng/mL,30,100,low,LabCorp,Consider supplementation
-BIO-008,2024-06-15,vitamin,Vitamin B12,450,pg/mL,200,900,normal,LabCorp,
-BIO-009,2024-06-15,mineral,Iron,85,mcg/dL,60,170,normal,LabCorp,
-BIO-010,2024-06-15,mineral,Ferritin,95,ng/mL,30,400,normal,LabCorp,
-BIO-011,2024-06-15,thyroid,TSH,2.1,mIU/L,0.4,4.0,normal,LabCorp,
-BIO-012,2024-06-15,thyroid,Free T4,1.2,ng/dL,0.8,1.8,normal,LabCorp,
-BIO-013,2024-06-15,metabolic,Creatinine,0.95,mg/dL,0.7,1.3,normal,LabCorp,
-BIO-014,2024-06-15,metabolic,eGFR,98,mL/min,90,120,normal,LabCorp,
-BIO-015,2024-09-20,blood_panel,Glucose (Fasting),92,mg/dL,70,100,normal,Quest,Fasting sample
-BIO-016,2024-09-20,blood_panel,HbA1c,5.3,%,4.0,5.6,normal,Quest,Improved from June
-BIO-017,2024-09-20,lipid_panel,Total Cholesterol,188,mg/dL,0,200,normal,Quest,
-BIO-018,2024-09-20,lipid_panel,LDL Cholesterol,105,mg/dL,0,100,high,Quest,Improved but still elevated
-BIO-019,2024-09-20,lipid_panel,HDL Cholesterol,62,mg/dL,40,60,normal,Quest,Good improvement
-BIO-020,2024-09-20,lipid_panel,Triglycerides,128,mg/dL,0,150,normal,Quest,
-BIO-021,2024-09-20,vitamin,Vitamin D,42,ng/mL,30,100,normal,Quest,Improved with supplementation
-BIO-022,2024-09-20,vitamin,Vitamin B12,480,pg/mL,200,900,normal,Quest,
-BIO-023,2024-09-20,blood_pressure,Systolic BP,122,mmHg,90,120,high,Home Monitor,Morning reading
-BIO-024,2024-09-20,blood_pressure,Diastolic BP,78,mmHg,60,80,normal,Home Monitor,Morning reading
-BIO-025,2024-11-15,blood_panel,Glucose (Fasting),89,mg/dL,70,100,normal,LabCorp,Fasting sample
-BIO-026,2024-11-15,blood_panel,HbA1c,5.2,%,4.0,5.6,normal,LabCorp,Continued improvement
-BIO-027,2024-11-15,lipid_panel,Total Cholesterol,182,mg/dL,0,200,normal,LabCorp,
-BIO-028,2024-11-15,lipid_panel,LDL Cholesterol,98,mg/dL,0,100,normal,LabCorp,Now in normal range
-BIO-029,2024-11-15,lipid_panel,HDL Cholesterol,65,mg/dL,40,60,normal,LabCorp,Excellent
-BIO-030,2024-11-15,lipid_panel,Triglycerides,115,mg/dL,0,150,normal,LabCorp,
-BIO-031,2024-11-15,vitamin,Vitamin D,48,ng/mL,30,100,normal,LabCorp,Optimal range
-BIO-032,2024-11-15,inflammatory,CRP (High Sensitivity),0.8,mg/L,0,3.0,normal,LabCorp,Low inflammation
-BIO-033,2024-11-15,blood_pressure,Systolic BP,118,mmHg,90,120,normal,Home Monitor,Morning reading
-BIO-034,2024-11-15,blood_pressure,Diastolic BP,75,mmHg,60,80,normal,Home Monitor,Morning reading
+BIO-001,2025-06-15,blood_panel,Glucose (Fasting),95,mg/dL,70,100,normal,LabCorp,Fasting sample
+BIO-002,2025-06-15,blood_panel,HbA1c,5.4,%,4.0,5.6,normal,LabCorp,
+BIO-003,2025-06-15,lipid_panel,Total Cholesterol,195,mg/dL,0,200,normal,LabCorp,
+BIO-004,2025-06-15,lipid_panel,LDL Cholesterol,118,mg/dL,0,100,high,LabCorp,Slightly elevated
+BIO-005,2025-06-15,lipid_panel,HDL Cholesterol,58,mg/dL,40,60,normal,LabCorp,
+BIO-006,2025-06-15,lipid_panel,Triglycerides,142,mg/dL,0,150,normal,LabCorp,
+BIO-007,2025-06-15,vitamin,Vitamin D,28,ng/mL,30,100,low,LabCorp,Consider supplementation
+BIO-008,2025-06-15,vitamin,Vitamin B12,450,pg/mL,200,900,normal,LabCorp,
+BIO-009,2025-06-15,mineral,Iron,85,mcg/dL,60,170,normal,LabCorp,
+BIO-010,2025-06-15,mineral,Ferritin,95,ng/mL,30,400,normal,LabCorp,
+BIO-011,2025-06-15,thyroid,TSH,2.1,mIU/L,0.4,4.0,normal,LabCorp,
+BIO-012,2025-06-15,thyroid,Free T4,1.2,ng/dL,0.8,1.8,normal,LabCorp,
+BIO-013,2025-06-15,metabolic,Creatinine,0.95,mg/dL,0.7,1.3,normal,LabCorp,
+BIO-014,2025-06-15,metabolic,eGFR,98,mL/min,90,120,normal,LabCorp,
+BIO-015,2025-09-20,blood_panel,Glucose (Fasting),92,mg/dL,70,100,normal,Quest,Fasting sample
+BIO-016,2025-09-20,blood_panel,HbA1c,5.3,%,4.0,5.6,normal,Quest,Improved from June
+BIO-017,2025-09-20,lipid_panel,Total Cholesterol,188,mg/dL,0,200,normal,Quest,
+BIO-018,2025-09-20,lipid_panel,LDL Cholesterol,110,mg/dL,0,100,high,Quest,Near optimal
+BIO-019,2025-09-20,lipid_panel,HDL Cholesterol,55,mg/dL,40,60,normal,Quest,
+BIO-020,2025-09-20,lipid_panel,Triglycerides,128,mg/dL,0,150,normal,Quest,
+BIO-021,2025-09-20,vitamin,Vitamin D,25,ng/mL,30,100,low,Quest,Still low - increase supplementation
+BIO-022,2025-09-20,vitamin,Vitamin B12,460,pg/mL,200,900,normal,Quest,
+BIO-023,2025-09-20,blood_pressure,Systolic BP,122,mmHg,90,120,high,Home Monitor,Morning reading
+BIO-024,2025-09-20,blood_pressure,Diastolic BP,78,mmHg,60,80,normal,Home Monitor,Morning reading
+BIO-025,2025-12-01,blood_panel,Glucose (Fasting),94,mg/dL,70,100,normal,LabCorp,Fasting sample
+BIO-026,2025-12-01,blood_panel,HbA1c,5.4,%,4.0,5.6,normal,LabCorp,Stable
+BIO-027,2025-12-01,lipid_panel,Total Cholesterol,185,mg/dL,0,200,normal,LabCorp,
+BIO-028,2025-12-01,lipid_panel,LDL Cholesterol,110,mg/dL,0,100,high,LabCorp,Near optimal
+BIO-029,2025-12-01,lipid_panel,HDL Cholesterol,55,mg/dL,40,60,normal,LabCorp,Could be higher
+BIO-030,2025-12-01,lipid_panel,Triglycerides,120,mg/dL,0,150,normal,LabCorp,
+BIO-031,2025-12-01,vitamin,Vitamin D,22,ng/mL,30,100,low,LabCorp,Low - affects energy and mood - recommend supplementation
+BIO-032,2025-12-01,vitamin,Vitamin B12,445,pg/mL,200,900,normal,LabCorp,
+BIO-033,2025-12-01,thyroid,TSH,2.3,mIU/L,0.4,4.0,normal,LabCorp,Normal thyroid function
+BIO-034,2025-12-01,thyroid,Free T4,1.1,ng/dL,0.8,1.8,normal,LabCorp,
+BIO-035,2025-12-01,inflammatory,CRP (High Sensitivity),1.2,mg/L,0,3.0,normal,LabCorp,Low inflammation
+BIO-036,2025-12-01,blood_pressure,Systolic BP,118,mmHg,90,120,normal,Home Monitor,Morning reading
+BIO-037,2025-12-01,blood_pressure,Diastolic BP,76,mmHg,60,80,normal,Home Monitor,Morning reading
+BIO-038,2025-12-01,mineral,Iron,78,mcg/dL,60,170,normal,LabCorp,
+BIO-039,2025-12-01,mineral,Ferritin,88,ng/mL,30,400,normal,LabCorp,

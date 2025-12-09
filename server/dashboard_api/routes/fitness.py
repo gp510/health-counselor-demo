@@ -14,21 +14,25 @@ def _row_to_fitness(row) -> FitnessRecord:
     if workout_type in ("none", "None", ""):
         workout_type = None
 
+    # Helper to safely convert to int (handles float strings like '111.0')
+    def to_int(val):
+        return int(float(val)) if val else 0
+
     return FitnessRecord(
         record_id=row["record_id"],
         date=row["date"],
         data_source=row["data_source"],
-        steps=int(row["steps"]),
-        distance_km=float(row["distance_km"]),
-        active_minutes=int(row["active_minutes"]),
-        calories_burned=int(row["calories_burned"]),
-        resting_heart_rate=int(row["resting_heart_rate"]),
-        avg_heart_rate=int(row["avg_heart_rate"]),
-        max_heart_rate=int(row["max_heart_rate"]),
-        sleep_hours=float(row["sleep_hours"]),
-        sleep_quality_score=int(row["sleep_quality_score"]),
+        steps=to_int(row["steps"]),
+        distance_km=float(row["distance_km"] or 0),
+        active_minutes=to_int(row["active_minutes"]),
+        calories_burned=to_int(row["calories_burned"]),
+        resting_heart_rate=to_int(row["resting_heart_rate"]),
+        avg_heart_rate=to_int(row["avg_heart_rate"]),
+        max_heart_rate=to_int(row["max_heart_rate"]),
+        sleep_hours=float(row["sleep_hours"] or 0),
+        sleep_quality_score=to_int(row["sleep_quality_score"]),
         workout_type=workout_type,
-        workout_duration_min=int(row["workout_duration_min"]),
+        workout_duration_min=to_int(row["workout_duration_min"]),
     )
 
 
@@ -51,10 +55,18 @@ async def get_fitness_records(
         else:
             return []
 
+        # Filter out incomplete records where all key metrics are zero
+        # (e.g., records created by wearable listener with only heart rate data)
         cursor.execute(
             """
             SELECT * FROM fitness_data
             WHERE date >= ?
+              AND NOT (
+                  CAST(steps AS INTEGER) = 0
+                  AND CAST(active_minutes AS INTEGER) = 0
+                  AND CAST(calories_burned AS INTEGER) = 0
+                  AND CAST(sleep_hours AS REAL) = 0
+              )
             ORDER BY date DESC
             """,
             (str(cutoff_date),),

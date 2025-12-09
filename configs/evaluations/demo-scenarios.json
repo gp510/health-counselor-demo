@@ -1,0 +1,48 @@
+{
+  "broker": {
+    "SOLACE_BROKER_URL": "${SOLACE_BROKER_URL}",
+    "SOLACE_BROKER_VPN": "${SOLACE_BROKER_VPN}",
+    "SOLACE_BROKER_USERNAME": "${SOLACE_BROKER_USERNAME}",
+    "SOLACE_BROKER_PASSWORD": "${SOLACE_BROKER_PASSWORD}"
+  },
+  "agents": [
+    "configs/agents/health-orchestrator.yaml",
+    "configs/agents/biomarker-agent.yaml",
+    "configs/agents/fitness-agent.yaml",
+    "configs/agents/diet-agent.yaml",
+    "configs/agents/mental-wellness-agent.yaml",
+    "configs/agents/wearable-listener-agent.yaml"
+  ],
+  "llm_models": [
+    {
+      "name": "planning",
+      "env": {
+        "LLM_SERVICE_PLANNING_MODEL_NAME": "${LLM_SERVICE_PLANNING_MODEL_NAME}",
+        "LLM_SERVICE_ENDPOINT": "${LLM_SERVICE_ENDPOINT}",
+        "LLM_SERVICE_API_KEY": "${LLM_SERVICE_API_KEY}"
+      }
+    },
+    {
+      "name": "general",
+      "env": {
+        "LLM_SERVICE_PLANNING_MODEL_NAME": "${LLM_SERVICE_PLANNING_MODEL_NAME}",
+        "LLM_SERVICE_GENERAL_MODEL_NAME": "${LLM_SERVICE_GENERAL_MODEL_NAME}",
+        "LLM_SERVICE_ENDPOINT": "${LLM_SERVICE_ENDPOINT}",
+        "LLM_SERVICE_API_KEY": "${LLM_SERVICE_API_KEY}"
+      }
+    }
+  ],
+  "test_cases": [
+    "configs/evaluations/test_cases/scenario1_latest_cholesterol.test.json",
+    "configs/evaluations/test_cases/scenario2_afternoon_fatigue.test.json",
+    "configs/evaluations/test_cases/scenario3_current_heart_rate.test.json"
+  ],
+  "results_dir_name": "eval_results",
+  "runs": 1,
+  "workers": 1,
+  "evaluation_settings": {
+    "tool_matching_enabled": true,
+    "response_matching_enabled": true,
+    "llm_evaluation_enabled": false
+  }
+}

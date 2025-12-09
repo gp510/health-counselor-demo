@@ -1,176 +1,213 @@
 meal_id,date,meal_type,food_items,calories,protein_g,carbs_g,fat_g,fiber_g,sodium_mg,sugar_g,water_ml,notes
-MEAL-001,2024-11-25,breakfast,Oatmeal with blueberries and almonds,380,12,58,10,8,150,14,250,
-MEAL-002,2024-11-25,snack,Greek yogurt with honey,180,15,22,4,0,65,18,0,
-MEAL-003,2024-11-25,lunch,Grilled chicken salad with quinoa,520,42,35,22,6,680,8,350,
-MEAL-004,2024-11-25,snack,Apple with almond butter,280,7,32,16,5,85,22,0,
-MEAL-005,2024-11-25,dinner,Salmon with roasted vegetables and brown rice,650,38,48,28,7,520,6,400,
-MEAL-006,2024-11-26,breakfast,Scrambled eggs with avocado toast,450,22,32,28,8,580,4,300,
-MEAL-007,2024-11-26,snack,Mixed nuts and dried fruit,220,6,24,14,3,45,16,0,
-MEAL-008,2024-11-26,lunch,Turkey and vegetable wrap,480,32,42,18,5,890,6,250,High sodium
-MEAL-009,2024-11-26,snack,Protein shake,200,25,12,4,2,180,8,400,Post-workout
-MEAL-010,2024-11-26,dinner,Grilled steak with sweet potato,580,45,38,24,5,480,8,350,
-MEAL-011,2024-11-27,breakfast,Smoothie bowl with granola,420,14,62,12,9,120,28,200,
-MEAL-012,2024-11-27,snack,Cottage cheese with berries,160,18,14,2,2,380,10,0,
-MEAL-013,2024-11-27,lunch,Tuna poke bowl,550,38,52,18,4,920,12,300,High sodium
-MEAL-014,2024-11-27,snack,Celery with hummus,120,4,12,6,3,280,2,0,
-MEAL-015,2024-11-27,dinner,Chicken stir-fry with vegetables,480,35,42,16,6,780,8,400,
-MEAL-016,2024-11-28,breakfast,Whole grain pancakes with maple syrup,520,12,78,16,4,650,32,200,
-MEAL-017,2024-11-28,snack,Banana,105,1,27,0,3,1,14,0,
-MEAL-018,2024-11-28,lunch,Lentil soup with bread,420,18,58,10,14,820,8,300,
-MEAL-019,2024-11-28,snack,Dark chocolate squares,180,2,18,12,3,15,14,0,
-MEAL-020,2024-11-28,dinner,Baked cod with asparagus,380,35,18,16,4,420,4,350,Light dinner
-MEAL-021,2024-11-29,breakfast,Avocado toast with poached eggs,480,20,35,28,10,520,4,250,
-MEAL-022,2024-11-29,snack,Orange,65,1,16,0,3,0,12,0,
-MEAL-023,2024-11-29,lunch,Mediterranean salad with falafel,580,18,52,32,8,720,10,300,
-MEAL-024,2024-11-29,snack,Rice cakes with peanut butter,240,8,28,12,2,180,6,0,
-MEAL-025,2024-11-29,dinner,Shrimp pasta with garlic sauce,620,32,68,22,4,880,6,350,
-MEAL-026,2024-11-30,breakfast,Overnight oats with chia seeds,360,14,52,10,10,140,18,200,
-MEAL-027,2024-11-30,snack,Hard boiled eggs,140,12,1,10,0,140,0,0,
-MEAL-028,2024-11-30,lunch,Grilled vegetable panini,520,18,58,24,6,980,8,250,High sodium
-MEAL-029,2024-11-30,snack,Edamame,190,17,14,8,8,420,3,0,
-MEAL-030,2024-11-30,dinner,Roasted chicken with mashed potatoes,580,42,38,26,4,620,4,400,
-MEAL-031,2024-12-01,breakfast,Egg white omelette with spinach,280,28,8,14,2,480,2,300,
-MEAL-032,2024-12-01,snack,Protein bar,220,20,24,8,4,180,8,0,
-MEAL-033,2024-12-01,lunch,Sushi rolls,480,18,68,12,4,1120,10,250,High sodium
-MEAL-034,2024-12-01,snack,Carrot sticks with guacamole,180,3,18,12,5,220,6,0,
-MEAL-035,2024-12-01,dinner,Turkey meatballs with zucchini noodles,420,38,22,18,5,680,8,400,
-MEAL-036,2024-12-02,breakfast,Greek yogurt parfait,320,18,42,8,4,120,28,150,
-MEAL-037,2024-12-02,snack,Trail mix,280,8,28,18,3,65,16,0,
-MEAL-038,2024-12-02,lunch,Chicken Caesar wrap,550,35,42,26,4,1080,4,250,High sodium
-MEAL-039,2024-12-02,snack,Apple slices,80,0,22,0,4,2,16,0,
-MEAL-040,2024-12-02,dinner,Grilled salmon with quinoa salad,580,42,35,28,6,520,6,400,
-MEAL-041,2024-12-03,breakfast,Breakfast burrito,520,24,48,26,6,920,4,200,
-MEAL-042,2024-12-03,snack,Cottage cheese,110,14,6,2,0,350,4,0,
-MEAL-043,2024-12-03,lunch,Asian chicken salad,480,35,38,20,6,780,12,300,
-MEAL-044,2024-12-03,snack,Almonds,170,6,6,15,3,0,1,0,
-MEAL-045,2024-12-03,dinner,Beef and broccoli with rice,620,38,58,24,4,1050,8,350,
-MEAL-046,2024-12-04,breakfast,Steel cut oats with walnuts,380,10,52,14,8,120,12,250,
-MEAL-047,2024-12-04,snack,Berries mix,85,1,20,1,4,2,14,0,
-MEAL-048,2024-12-04,lunch,Turkey club sandwich,580,32,48,28,4,1240,8,250,High sodium
-MEAL-049,2024-12-04,snack,Cheese and crackers,220,8,18,14,1,380,2,0,
-MEAL-050,2024-12-04,dinner,Baked chicken thighs with vegetables,520,40,28,26,6,580,6,400,
-MEAL-051,2024-12-05,breakfast,Smoothie with protein powder,380,28,42,10,6,180,24,350,
-MEAL-052,2024-12-05,snack,Rice cake with avocado,180,3,22,10,4,120,1,0,
-MEAL-053,2024-12-05,lunch,Grilled fish tacos,520,32,48,22,6,720,6,250,
-MEAL-054,2024-12-05,snack,Greek yogurt,120,15,8,2,0,65,6,0,
-MEAL-055,2024-12-05,dinner,Vegetable curry with chickpeas,480,16,62,18,12,680,10,400,
-MEAL-056,2024-11-01,breakfast,Scrambled eggs with whole wheat toast,380,22,32,18,4,520,4,250,
-MEAL-057,2024-11-01,snack,Apple with peanut butter,240,6,30,12,4,120,20,0,
-MEAL-058,2024-11-01,lunch,Grilled chicken wrap with avocado,520,38,42,22,8,680,4,300,
-MEAL-059,2024-11-01,snack,Greek yogurt,120,15,8,2,0,65,6,0,
-MEAL-060,2024-11-01,dinner,Baked salmon with roasted broccoli,480,38,18,26,6,420,4,400,
-MEAL-061,2024-11-02,breakfast,Overnight oats with banana,360,12,58,8,8,140,22,200,
-MEAL-062,2024-11-02,snack,Mixed nuts,180,5,8,16,2,45,2,0,
-MEAL-063,2024-11-02,lunch,Turkey sandwich on sourdough,480,32,48,18,4,920,6,250,High sodium
-MEAL-064,2024-11-02,snack,Carrot sticks with hummus,140,4,16,6,4,280,4,0,
-MEAL-065,2024-11-02,dinner,Grilled steak with sweet potato,620,45,42,28,5,520,8,350,
-MEAL-066,2024-11-03,breakfast,Protein smoothie with spinach,320,28,32,8,6,180,18,400,
-MEAL-067,2024-11-03,snack,Orange,65,1,16,0,3,0,12,0,
-MEAL-068,2024-11-03,lunch,Caesar salad with grilled chicken,480,35,22,28,4,820,4,300,
-MEAL-069,2024-11-03,snack,Cottage cheese with berries,160,18,14,2,2,380,10,0,
-MEAL-070,2024-11-03,dinner,Shrimp stir-fry with vegetables,420,32,38,14,6,780,6,400,
-MEAL-071,2024-11-04,breakfast,Avocado toast with poached egg,420,18,28,28,10,480,2,250,
-MEAL-072,2024-11-04,snack,Protein bar,220,20,24,8,4,180,8,0,
-MEAL-073,2024-11-04,lunch,Poke bowl with tuna,550,35,58,18,4,880,8,300,High sodium
-MEAL-074,2024-11-04,snack,Almonds,170,6,6,15,3,0,1,0,
-MEAL-075,2024-11-04,dinner,Roasted chicken with quinoa,520,42,35,20,5,520,4,400,
-MEAL-076,2024-11-05,breakfast,Greek yogurt parfait with granola,380,18,52,10,5,120,28,150,
-MEAL-077,2024-11-05,snack,Banana,105,1,27,0,3,1,14,0,
-MEAL-078,2024-11-05,lunch,Mediterranean wrap with falafel,520,16,58,24,8,720,8,250,
-MEAL-079,2024-11-05,snack,Trail mix,240,6,26,14,3,65,14,0,
-MEAL-080,2024-11-05,dinner,Pan-seared cod with asparagus,380,35,18,16,4,420,4,350,
-MEAL-081,2024-11-06,breakfast,Omelette with vegetables,320,24,8,22,2,480,2,300,
-MEAL-082,2024-11-06,snack,Apple slices,80,0,22,0,4,2,16,0,
-MEAL-083,2024-11-06,lunch,Chicken burrito bowl,580,38,52,24,10,920,6,300,High sodium
-MEAL-084,2024-11-06,snack,String cheese,80,7,1,5,0,180,0,0,
-MEAL-085,2024-11-06,dinner,Grilled salmon with wild rice,550,40,38,24,4,480,4,400,
-MEAL-086,2024-11-07,breakfast,Whole grain waffles with berries,420,10,62,14,6,480,22,200,
-MEAL-087,2024-11-07,snack,Hard boiled eggs,140,12,1,10,0,140,0,0,
-MEAL-088,2024-11-07,lunch,Asian chicken salad,480,32,42,18,6,720,10,300,
-MEAL-089,2024-11-07,snack,Celery with peanut butter,180,6,10,14,3,180,4,0,
-MEAL-090,2024-11-07,dinner,Turkey meatloaf with vegetables,480,38,28,22,5,680,6,400,
-MEAL-091,2024-11-08,breakfast,Smoothie bowl with nuts,420,14,58,16,8,120,26,200,
-MEAL-092,2024-11-08,snack,Rice cakes with almond butter,200,5,24,10,2,120,4,0,
-MEAL-093,2024-11-08,lunch,Grilled vegetable panini,480,18,52,22,6,880,6,250,High sodium
-MEAL-094,2024-11-08,snack,Edamame,190,17,14,8,8,420,3,0,
-MEAL-095,2024-11-08,dinner,Baked chicken with roasted potatoes,580,42,42,24,5,580,4,400,
-MEAL-096,2024-11-09,breakfast,Eggs benedict with spinach,520,28,32,32,3,780,4,250,Weekend brunch
-MEAL-097,2024-11-09,snack,Mixed fruit,120,1,30,0,4,5,24,0,
-MEAL-098,2024-11-09,lunch,Lobster roll,580,28,42,32,2,1080,6,200,High sodium - dining out
-MEAL-099,2024-11-09,snack,Popcorn,150,3,22,6,4,280,0,0,
-MEAL-100,2024-11-09,dinner,Prime rib with mashed potatoes,720,52,38,38,3,680,4,350,Weekend dinner
-MEAL-101,2024-11-10,breakfast,Belgian waffles with strawberries,480,8,72,18,4,520,32,200,Weekend brunch
-MEAL-102,2024-11-10,snack,Yogurt smoothie,180,12,28,2,2,120,22,250,
-MEAL-103,2024-11-10,lunch,Fish and chips,680,28,62,34,4,1120,4,200,High sodium - dining out
-MEAL-104,2024-11-10,snack,Dark chocolate,160,2,16,10,3,15,12,0,
-MEAL-105,2024-11-10,dinner,Roasted chicken with vegetables,480,38,28,22,6,520,4,400,
-MEAL-106,2024-11-11,breakfast,Steel cut oats with walnuts,380,10,52,14,8,120,12,250,
-MEAL-107,2024-11-11,snack,Cottage cheese,110,14,6,2,0,350,4,0,
-MEAL-108,2024-11-11,lunch,Grilled chicken salad,450,38,22,22,5,580,4,350,
-MEAL-109,2024-11-11,snack,Apple with cheese,180,6,22,8,3,180,16,0,
-MEAL-110,2024-11-11,dinner,Beef stir-fry with brown rice,580,35,58,22,5,820,6,400,
-MEAL-111,2024-11-12,breakfast,Egg white omelette with avocado,320,22,12,22,8,420,2,300,
-MEAL-112,2024-11-12,snack,Greek yogurt with honey,180,15,22,4,0,65,18,0,
-MEAL-113,2024-11-12,lunch,Sushi lunch special,520,22,68,14,4,980,8,250,High sodium
-MEAL-114,2024-11-12,snack,Berries mix,85,1,20,1,4,2,14,0,
-MEAL-115,2024-11-12,dinner,Grilled pork chops with applesauce,520,40,28,26,3,580,14,400,
-MEAL-116,2024-11-13,breakfast,Breakfast burrito,520,24,48,26,6,920,4,200,
-MEAL-117,2024-11-13,snack,Almonds and dried fruit,220,5,26,12,4,20,18,0,
-MEAL-118,2024-11-13,lunch,Chicken tikka masala with rice,620,32,68,24,4,1080,8,300,High sodium
-MEAL-119,2024-11-13,snack,Celery with hummus,120,4,12,6,3,280,2,0,
-MEAL-120,2024-11-13,dinner,Baked tilapia with quinoa,420,38,32,12,4,380,2,400,Light dinner
-MEAL-121,2024-11-14,breakfast,Pancakes with maple syrup,480,10,72,16,3,580,28,200,
-MEAL-122,2024-11-14,snack,Protein shake,200,25,12,4,2,180,8,400,Post-workout
-MEAL-123,2024-11-14,lunch,Turkey club sandwich,580,32,48,28,4,1180,8,250,High sodium
-MEAL-124,2024-11-14,snack,Carrot and cucumber sticks,60,2,12,0,3,80,6,0,
-MEAL-125,2024-11-14,dinner,Lamb chops with roasted vegetables,620,42,28,38,6,580,4,400,
-MEAL-126,2024-11-15,breakfast,Avocado toast with smoked salmon,480,28,28,28,8,680,2,250,
-MEAL-127,2024-11-15,snack,Orange,65,1,16,0,3,0,12,0,
-MEAL-128,2024-11-15,lunch,Grain bowl with chickpeas,520,18,68,18,12,620,8,300,
-MEAL-129,2024-11-15,snack,Mixed nuts,180,5,8,16,2,45,2,0,
-MEAL-130,2024-11-15,dinner,Seared scallops with risotto,580,32,52,26,2,720,4,400,
-MEAL-131,2024-11-16,breakfast,French toast with berries,520,14,68,20,5,480,32,200,Weekend brunch
-MEAL-132,2024-11-16,snack,Fruit salad,140,2,34,0,4,10,28,0,
-MEAL-133,2024-11-16,lunch,Burger with sweet potato fries,780,38,68,38,6,1240,10,200,High sodium - weekend
-MEAL-134,2024-11-16,snack,Ice cream,280,4,32,14,0,120,26,0,Weekend treat
-MEAL-135,2024-11-16,dinner,Grilled salmon with asparagus,450,38,18,24,4,420,4,400,
-MEAL-136,2024-11-17,breakfast,Eggs with bacon and toast,520,28,32,32,2,980,4,250,Weekend breakfast
-MEAL-137,2024-11-17,snack,Banana smoothie,220,8,42,4,4,80,28,300,
-MEAL-138,2024-11-17,lunch,Ramen noodles,680,28,78,28,4,1420,8,350,High sodium - dining out
-MEAL-139,2024-11-17,snack,Cheese and crackers,220,8,18,14,1,380,2,0,
-MEAL-140,2024-11-17,dinner,Roasted turkey breast with gravy,480,42,28,20,3,680,4,400,
-MEAL-141,2024-11-18,breakfast,Oatmeal with banana and honey,380,10,68,6,6,120,32,200,
-MEAL-142,2024-11-18,snack,Greek yogurt,120,15,8,2,0,65,6,0,
-MEAL-143,2024-11-18,lunch,Chicken Caesar salad,480,35,22,28,4,820,4,300,
-MEAL-144,2024-11-18,snack,Apple with almond butter,240,6,30,12,4,120,20,0,
-MEAL-145,2024-11-18,dinner,Beef tacos with salsa,580,32,48,28,8,920,6,400,
-MEAL-146,2024-11-19,breakfast,Smoothie with protein powder,380,28,42,10,6,180,24,350,
-MEAL-147,2024-11-19,snack,Cottage cheese with pineapple,180,16,18,2,1,420,14,0,
-MEAL-148,2024-11-19,lunch,Grilled fish sandwich,520,32,48,22,3,780,6,250,
-MEAL-149,2024-11-19,snack,Trail mix,240,6,26,14,3,65,14,0,
-MEAL-150,2024-11-19,dinner,Chicken parmesan with pasta,680,42,62,28,4,1080,8,400,High sodium
-MEAL-151,2024-11-20,breakfast,Veggie omelette,320,22,10,22,3,480,4,300,
-MEAL-152,2024-11-20,snack,Rice cake with avocado,160,3,20,8,4,120,1,0,
-MEAL-153,2024-11-20,lunch,Pho with beef,520,28,58,18,3,1280,6,400,High sodium
-MEAL-154,2024-11-20,snack,Edamame,190,17,14,8,8,420,3,0,
-MEAL-155,2024-11-20,dinner,Grilled swordfish with couscous,520,42,38,20,4,580,4,400,
-MEAL-156,2024-11-21,breakfast,Breakfast sandwich with egg,420,22,38,20,3,720,4,250,
-MEAL-157,2024-11-21,snack,Mixed berries,85,1,20,1,4,2,14,0,
-MEAL-158,2024-11-21,lunch,Chicken quesadilla,580,32,48,28,4,1020,4,200,High sodium
-MEAL-159,2024-11-21,snack,Almonds,170,6,6,15,3,0,1,0,
-MEAL-160,2024-11-21,dinner,Pan-roasted duck with vegetables,620,38,32,38,5,620,6,400,
-MEAL-161,2024-11-22,breakfast,Granola with milk and fruit,420,12,68,12,6,180,32,200,
-MEAL-162,2024-11-22,snack,Hard boiled eggs,140,12,1,10,0,140,0,0,
-MEAL-163,2024-11-22,lunch,Tuna melt sandwich,520,32,42,24,3,920,4,250,High sodium
-MEAL-164,2024-11-22,snack,Celery with peanut butter,180,6,10,14,3,180,4,0,
-MEAL-165,2024-11-22,dinner,Herb-crusted salmon with potatoes,580,40,38,28,5,520,4,400,
-MEAL-166,2024-11-23,breakfast,Eggs florentine,480,28,28,28,4,680,4,250,Weekend brunch
-MEAL-167,2024-11-23,snack,Fruit and cheese plate,280,12,28,14,3,320,22,0,
-MEAL-168,2024-11-23,lunch,Pizza slice with salad,620,22,68,28,5,1180,8,250,High sodium - weekend
-MEAL-169,2024-11-23,snack,Popcorn,150,3,22,6,4,280,0,0,
-MEAL-170,2024-11-23,dinner,Grilled ribeye with vegetables,680,48,22,42,5,620,4,400,Weekend dinner
-MEAL-171,2024-11-24,breakfast,Cinnamon rolls with coffee,520,8,72,22,2,480,38,200,Weekend treat
-MEAL-172,2024-11-24,snack,Greek yogurt with granola,220,15,28,6,2,120,18,0,
-MEAL-173,2024-11-24,lunch,Chicken noodle soup with bread,420,22,52,12,4,980,6,350,High sodium
-MEAL-174,2024-11-24,snack,Apple slices with caramel,180,1,42,4,3,80,32,0,
-MEAL-175,2024-11-24,dinner,Roasted pork tenderloin with apples,520,40,32,24,4,520,18,400,
+MEAL-001,2025-11-01,breakfast,Blueberry muffin with orange juice,420,6,78,12,2,380,42,150,Low protein high sugar breakfast
+MEAL-002,2025-11-01,morning_coffee,Large latte with vanilla syrup,280,10,42,8,0,150,36,0,9am coffee
+MEAL-003,2025-11-01,lunch,Pasta carbonara with garlic bread,920,28,98,42,4,1420,8,200,Heavy carb lunch
+MEAL-004,2025-11-01,afternoon_coffee,Medium americano,15,1,2,0,0,10,0,0,1:30pm - last caffeine
+MEAL-005,2025-11-01,snack,Granola bar,190,3,38,4,2,120,18,0,3pm snack
+MEAL-006,2025-11-01,dinner,Grilled chicken with vegetables,450,38,22,18,6,520,4,400,
+MEAL-007,2025-11-02,breakfast,Croissant with jam and coffee,380,5,52,18,1,320,22,200,Low protein breakfast
+MEAL-008,2025-11-02,morning_coffee,Caramel macchiato,320,8,48,12,0,180,42,0,9:30am coffee
+MEAL-009,2025-11-02,lunch,Burrito bowl with rice and beans,850,32,105,28,12,1580,6,250,High carb lunch
+MEAL-010,2025-11-02,afternoon_coffee,Espresso,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-011,2025-11-02,snack,Banana with crackers,210,2,48,2,4,85,22,0,
+MEAL-012,2025-11-02,dinner,Salmon with quinoa salad,520,38,35,22,5,480,4,350,
+MEAL-013,2025-11-03,breakfast,Cinnamon roll with milk,520,8,82,18,2,480,45,200,Weekend treat - high sugar
+MEAL-014,2025-11-03,morning_coffee,Mocha latte,350,10,48,14,0,160,38,0,10am coffee
+MEAL-015,2025-11-03,lunch,Chicken alfredo pasta with breadsticks,980,35,92,48,3,1620,8,200,Heavy Italian lunch
+MEAL-016,2025-11-03,snack,Apple,95,0,25,0,4,2,19,0,
+MEAL-017,2025-11-03,dinner,Steak with baked potato,620,42,45,28,4,580,3,400,
+MEAL-018,2025-11-04,breakfast,Bagel with cream cheese,420,10,62,16,2,580,8,150,Mostly carbs
+MEAL-019,2025-11-04,morning_coffee,Large cold brew with milk,120,4,12,4,0,80,8,0,8:30am coffee
+MEAL-020,2025-11-04,lunch,Fried rice with sweet and sour chicken,880,28,110,32,3,1850,22,200,High carb Asian lunch
+MEAL-021,2025-11-04,afternoon_coffee,Small latte,150,6,18,6,0,90,14,0,1:45pm - last caffeine
+MEAL-022,2025-11-04,snack,Rice cakes with honey,180,2,42,0,1,60,18,0,
+MEAL-023,2025-11-04,dinner,Turkey meatballs with zucchini noodles,420,38,22,18,5,680,8,400,Light dinner
+MEAL-024,2025-11-05,breakfast,Toast with butter and jam,320,4,58,10,2,380,28,100,Low protein
+MEAL-025,2025-11-05,morning_coffee,Vanilla latte,280,8,42,10,0,140,35,0,9am coffee
+MEAL-026,2025-11-05,lunch,Pad Thai with spring rolls,920,22,118,38,4,1720,28,200,High carb Thai lunch
+MEAL-027,2025-11-05,afternoon_coffee,Decaf americano,10,0,2,0,0,5,0,0,2pm - switched to decaf
+MEAL-028,2025-11-05,snack,Cookies,240,2,38,10,1,180,22,0,Office snacks
+MEAL-029,2025-11-05,dinner,Grilled fish with steamed vegetables,380,35,18,16,6,420,4,350,Light dinner
+MEAL-030,2025-11-06,breakfast,Pancakes with maple syrup,480,8,88,10,2,620,42,150,High carb breakfast
+MEAL-031,2025-11-06,morning_coffee,Large cappuccino,180,10,18,8,0,120,14,0,8:45am coffee
+MEAL-032,2025-11-06,lunch,Pizza slices (3) with soda,980,28,122,38,4,2150,48,350,Heavy lunch with sugar
+MEAL-033,2025-11-06,afternoon_coffee,Espresso shot,5,0,1,0,0,5,0,0,1:30pm - last caffeine
+MEAL-034,2025-11-06,snack,Pretzels,220,4,46,2,2,1020,0,0,
+MEAL-035,2025-11-06,dinner,Chicken stir-fry with vegetables,480,35,42,16,6,780,8,400,
+MEAL-036,2025-11-07,breakfast,Danish pastry with juice,420,4,72,14,1,340,38,150,Pastry breakfast
+MEAL-037,2025-11-07,morning_coffee,Hazelnut latte,290,8,44,10,0,150,36,0,9:15am coffee
+MEAL-038,2025-11-07,lunch,Lasagna with Caesar salad,880,32,82,42,5,1480,10,250,Heavy Italian
+MEAL-039,2025-11-07,afternoon_coffee,Small coffee,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-040,2025-11-07,snack,Fruit snacks,160,0,40,0,0,25,32,0,
+MEAL-041,2025-11-07,dinner,Baked cod with asparagus,380,35,18,16,4,420,4,350,Light dinner
+MEAL-042,2025-11-08,breakfast,Waffles with whipped cream,520,8,78,20,2,480,38,150,High sugar breakfast
+MEAL-043,2025-11-08,morning_coffee,Caramel cold brew,280,4,48,8,0,140,42,0,9am coffee
+MEAL-044,2025-11-08,lunch,Fish and chips with coleslaw,920,28,95,45,4,1380,8,200,Fried heavy lunch
+MEAL-045,2025-11-08,afternoon_coffee,Decaf latte,140,6,16,5,0,85,12,0,2pm - decaf only
+MEAL-046,2025-11-08,snack,Cheese crackers,210,4,28,10,1,420,2,0,
+MEAL-047,2025-11-08,dinner,Grilled shrimp with quinoa,420,32,38,14,4,580,4,400,
+MEAL-048,2025-11-09,breakfast,French toast with bacon,580,18,62,28,2,880,28,200,Weekend brunch
+MEAL-049,2025-11-09,morning_coffee,Flat white,150,8,12,8,0,100,10,0,10am coffee
+MEAL-050,2025-11-09,lunch,Burger with fries and milkshake,1150,38,118,52,5,1820,48,350,Heavy weekend lunch
+MEAL-051,2025-11-09,snack,Ice cream,280,4,38,14,0,120,32,0,
+MEAL-052,2025-11-09,dinner,Roasted chicken with potatoes,580,42,42,24,5,580,4,400,
+MEAL-053,2025-11-10,breakfast,Banana bread with butter,420,6,68,16,2,380,32,100,
+MEAL-054,2025-11-10,morning_coffee,Large latte,240,10,28,10,0,160,22,0,9:30am coffee
+MEAL-055,2025-11-10,lunch,Spaghetti bolognese with garlic bread,880,32,98,35,5,1420,12,250,Heavy pasta lunch
+MEAL-056,2025-11-10,snack,Trail mix,240,6,28,14,3,65,14,0,
+MEAL-057,2025-11-10,dinner,Grilled salmon with vegetables,520,40,22,28,6,480,4,400,
+MEAL-058,2025-11-11,breakfast,Scone with clotted cream,480,6,62,24,1,420,22,100,High fat/carb breakfast
+MEAL-059,2025-11-11,morning_coffee,Mocha with whipped cream,380,8,52,16,0,180,42,0,9am coffee
+MEAL-060,2025-11-11,lunch,Chicken fried rice with egg rolls,850,25,102,35,4,1680,8,200,Heavy Asian lunch
+MEAL-061,2025-11-11,afternoon_coffee,Americano,10,0,2,0,0,5,0,0,1:45pm - last caffeine
+MEAL-062,2025-11-11,snack,Candy bar,280,4,38,14,1,85,32,0,Sugar crash remedy
+MEAL-063,2025-11-11,dinner,Turkey with roasted vegetables,480,38,28,22,6,520,4,400,
+MEAL-064,2025-11-12,breakfast,Cereal with milk (Frosted Flakes),380,6,78,4,1,280,38,200,Sugary cereal
+MEAL-065,2025-11-12,morning_coffee,Vanilla cold brew,180,4,32,4,0,100,28,0,8:45am coffee
+MEAL-066,2025-11-12,lunch,Mac and cheese with breadsticks,920,28,105,42,3,1580,8,200,Heavy comfort food
+MEAL-067,2025-11-12,afternoon_coffee,Espresso,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-068,2025-11-12,snack,Chips,280,3,38,14,2,420,2,0,
+MEAL-069,2025-11-12,dinner,Baked chicken with quinoa,450,38,35,14,5,520,4,400,
+MEAL-070,2025-11-13,breakfast,Muffin top with coffee,380,4,68,12,1,340,35,200,Low protein pastry
+MEAL-071,2025-11-13,morning_coffee,Large caramel latte,340,10,52,10,0,180,45,0,9am coffee
+MEAL-072,2025-11-13,lunch,Burgers and onion rings,920,35,88,48,4,1720,12,200,Heavy fried lunch
+MEAL-073,2025-11-13,afternoon_coffee,Decaf cappuccino,120,6,12,5,0,80,8,0,2pm - decaf only
+MEAL-074,2025-11-13,snack,Granola bar,190,3,38,4,2,120,18,0,
+MEAL-075,2025-11-13,dinner,Grilled fish tacos,480,32,42,22,6,680,6,350,
+MEAL-076,2025-11-14,breakfast,Croissant sandwich (ham & cheese),480,18,42,26,1,920,4,150,Better protein but still carby
+MEAL-077,2025-11-14,morning_coffee,Flat white,150,8,12,8,0,100,10,0,9:30am coffee
+MEAL-078,2025-11-14,lunch,Chicken alfredo with caesar salad,920,38,82,48,4,1620,6,250,Heavy creamy lunch
+MEAL-079,2025-11-14,afternoon_coffee,Small americano,10,0,2,0,0,5,0,0,1:30pm - last caffeine
+MEAL-080,2025-11-14,snack,Apple with peanut butter,280,8,32,16,5,120,22,0,
+MEAL-081,2025-11-14,dinner,Steak with salad,520,42,12,32,4,580,4,400,
+MEAL-082,2025-11-15,breakfast,Pop tarts with juice,420,4,82,10,1,380,48,150,High sugar processed breakfast
+MEAL-083,2025-11-15,morning_coffee,Iced vanilla latte,260,8,42,8,0,140,35,0,9am coffee
+MEAL-084,2025-11-15,lunch,Fried chicken sandwich with fries,980,35,98,48,4,1850,8,200,Heavy fried lunch
+MEAL-085,2025-11-15,afternoon_coffee,Espresso,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-086,2025-11-15,snack,Cookies and milk,320,8,48,12,1,280,28,200,
+MEAL-087,2025-11-15,dinner,Salmon with steamed broccoli,420,38,18,22,6,420,4,350,
+MEAL-088,2025-11-16,breakfast,Belgian waffle with syrup,520,8,92,14,2,480,48,150,Weekend high carb
+MEAL-089,2025-11-16,morning_coffee,Mocha latte,340,10,48,12,0,160,38,0,10am coffee
+MEAL-090,2025-11-16,lunch,BBQ ribs with coleslaw and cornbread,1050,42,78,58,4,1920,28,200,Heavy weekend BBQ
+MEAL-091,2025-11-16,snack,Brownie,320,4,48,14,2,180,32,0,
+MEAL-092,2025-11-16,dinner,Grilled vegetables with hummus,380,12,52,14,10,520,8,400,Light to compensate
+MEAL-093,2025-11-17,breakfast,Donuts (2) with coffee,540,6,72,26,1,380,38,200,Sunday morning treat
+MEAL-094,2025-11-17,morning_coffee,Large cold brew,80,2,4,0,0,60,2,0,9:30am coffee
+MEAL-095,2025-11-17,lunch,Ramen with gyoza,850,28,102,32,4,2150,8,400,High sodium carb heavy
+MEAL-096,2025-11-17,snack,Edamame,190,17,14,8,8,420,3,0,
+MEAL-097,2025-11-17,dinner,Grilled chicken salad,380,35,18,18,6,480,4,350,Light Sunday dinner
+MEAL-098,2025-11-18,breakfast,Toast with nutella,380,6,62,14,2,220,32,100,Sugary spread
+MEAL-099,2025-11-18,morning_coffee,Cappuccino,140,8,14,6,0,100,10,0,8:45am coffee
+MEAL-100,2025-11-18,lunch,Chicken parmesan with spaghetti,920,42,88,38,4,1480,10,250,Heavy Italian
+MEAL-101,2025-11-18,afternoon_coffee,Decaf americano,10,0,2,0,0,5,0,0,2pm - decaf switch
+MEAL-102,2025-11-18,snack,Orange,65,1,16,0,3,0,12,0,
+MEAL-103,2025-11-18,dinner,Baked tilapia with rice,420,35,38,12,3,480,2,400,
+MEAL-104,2025-11-19,breakfast,Banana nut muffin with OJ,440,6,78,12,2,340,42,150,High sugar breakfast
+MEAL-105,2025-11-19,morning_coffee,Large hazelnut latte,300,10,46,10,0,160,38,0,9am coffee
+MEAL-106,2025-11-19,lunch,Loaded nachos with ground beef,920,32,82,52,8,1850,6,200,Heavy Tex-Mex
+MEAL-107,2025-11-19,afternoon_coffee,Small coffee,5,0,1,0,0,5,0,0,1:45pm - last caffeine
+MEAL-108,2025-11-19,snack,Yogurt parfait,220,12,32,6,2,120,24,0,
+MEAL-109,2025-11-19,dinner,Grilled shrimp skewers with vegetables,380,32,22,16,5,580,4,400,
+MEAL-110,2025-11-20,breakfast,Cinnamon toast crunch cereal,380,4,78,6,1,320,35,200,Sugary cereal
+MEAL-111,2025-11-20,morning_coffee,Caramel macchiato,320,8,48,12,0,180,42,0,9:15am coffee
+MEAL-112,2025-11-20,lunch,Philly cheesesteak with fries,980,38,88,52,4,1720,6,200,Heavy lunch
+MEAL-113,2025-11-20,afternoon_coffee,Espresso,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-114,2025-11-20,snack,Protein bar,220,20,24,8,4,180,8,0,
+MEAL-115,2025-11-20,dinner,Turkey burger with sweet potato,520,35,48,22,6,680,12,400,
+MEAL-116,2025-11-21,breakfast,English muffin with jam,320,6,58,6,2,380,22,100,Low protein
+MEAL-117,2025-11-21,morning_coffee,Vanilla latte,260,8,42,8,0,140,35,0,9am coffee
+MEAL-118,2025-11-21,lunch,Beef stroganoff with noodles,880,35,78,45,3,1420,8,250,Heavy Russian comfort food
+MEAL-119,2025-11-21,afternoon_coffee,Decaf latte,140,6,16,5,0,85,12,0,2pm - decaf
+MEAL-120,2025-11-21,snack,Mixed nuts,180,6,8,16,2,45,2,0,
+MEAL-121,2025-11-21,dinner,Grilled salmon with asparagus,480,40,18,28,4,420,4,400,
+MEAL-122,2025-11-22,breakfast,Chocolate chip pancakes,540,10,92,16,2,620,42,150,High sugar breakfast
+MEAL-123,2025-11-22,morning_coffee,Large mocha,380,10,54,14,0,180,44,0,9:30am coffee
+MEAL-124,2025-11-22,lunch,Chicken quesadilla with Mexican rice,880,38,92,38,6,1580,4,200,Heavy Mexican
+MEAL-125,2025-11-22,afternoon_coffee,Small americano,10,0,2,0,0,5,0,0,1:30pm - last caffeine
+MEAL-126,2025-11-22,snack,Cheese and crackers,220,8,18,14,1,380,2,0,
+MEAL-127,2025-11-22,dinner,Baked chicken with quinoa,450,38,35,14,5,520,4,400,
+MEAL-128,2025-11-23,breakfast,French pastries assortment,580,8,82,26,2,420,42,100,Weekend pastry indulgence
+MEAL-129,2025-11-23,morning_coffee,Flat white,150,8,12,8,0,100,10,0,10am coffee
+MEAL-130,2025-11-23,lunch,Prime rib with mashed potatoes and gravy,980,48,62,58,4,1280,8,250,Weekend feast
+MEAL-131,2025-11-23,snack,Apple pie slice,350,3,52,16,2,280,32,0,
+MEAL-132,2025-11-23,dinner,Light salad with grilled chicken,350,32,18,16,5,420,4,350,Compensating for big lunch
+MEAL-133,2025-11-24,breakfast,Bagel with cream cheese and lox,520,22,58,22,2,980,6,150,Weekend brunch
+MEAL-134,2025-11-24,morning_coffee,Large cold brew,80,2,4,0,0,60,2,0,9am coffee
+MEAL-135,2025-11-24,lunch,Thanksgiving leftovers plate,920,42,82,42,6,1420,18,250,Turkey stuffing mashed potatoes
+MEAL-136,2025-11-24,snack,Pumpkin pie,320,4,48,14,2,280,28,0,
+MEAL-137,2025-11-24,dinner,Turkey sandwich,420,28,42,16,4,780,4,350,
+MEAL-138,2025-11-25,breakfast,Oatmeal with brown sugar,320,6,62,4,4,180,28,200,Sugary oatmeal
+MEAL-139,2025-11-25,morning_coffee,Caramel latte,300,10,46,10,0,160,38,0,9am coffee
+MEAL-140,2025-11-25,lunch,Chicken tikka masala with naan and rice,920,35,98,38,4,1580,12,250,Heavy Indian lunch
+MEAL-141,2025-11-25,afternoon_coffee,Espresso,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-142,2025-11-25,snack,Chips and salsa,280,3,42,12,3,580,4,0,
+MEAL-143,2025-11-25,dinner,Grilled fish with vegetables,420,35,22,18,6,420,4,400,
+MEAL-144,2025-11-26,breakfast,Pop tart and banana,380,4,82,6,3,280,48,0,Quick sugary breakfast
+MEAL-145,2025-11-26,morning_coffee,Vanilla cold brew,180,4,32,4,0,100,28,0,8:30am coffee
+MEAL-146,2025-11-26,lunch,Pulled pork sandwich with mac and cheese,980,38,92,48,4,1720,18,200,Heavy BBQ lunch
+MEAL-147,2025-11-26,afternoon_coffee,Decaf americano,10,0,2,0,0,5,0,0,2pm - decaf only
+MEAL-148,2025-11-26,snack,Granola bar,190,3,38,4,2,120,18,0,
+MEAL-149,2025-11-26,dinner,Grilled chicken with roasted vegetables,450,38,28,18,6,520,4,400,
+MEAL-150,2025-11-27,breakfast,Blueberry scone with butter,450,6,62,20,1,380,28,100,Pastry breakfast
+MEAL-151,2025-11-27,morning_coffee,Large latte,240,10,28,10,0,160,22,0,9am coffee
+MEAL-152,2025-11-27,lunch,Spaghetti and meatballs with garlic bread,920,38,92,42,5,1480,12,250,Heavy pasta
+MEAL-153,2025-11-27,afternoon_coffee,Small coffee,5,0,1,0,0,5,0,0,1:45pm - last caffeine
+MEAL-154,2025-11-27,snack,Cookie,180,2,28,8,1,140,16,0,
+MEAL-155,2025-11-27,dinner,Baked salmon with quinoa,520,40,35,24,4,480,4,400,
+MEAL-156,2025-11-28,breakfast,Thanksgiving leftover pie,380,4,52,18,2,280,32,0,Holiday leftovers
+MEAL-157,2025-11-28,morning_coffee,Mocha,320,10,48,10,0,160,38,0,10am coffee
+MEAL-158,2025-11-28,lunch,Turkey dinner plate with stuffing,850,42,82,35,5,1380,12,300,Thanksgiving meal
+MEAL-159,2025-11-28,snack,Pecan pie,380,4,48,22,2,280,28,0,
+MEAL-160,2025-11-28,dinner,Light turkey sandwich,380,28,38,14,3,620,4,350,Light holiday dinner
+MEAL-161,2025-11-29,breakfast,Leftover pumpkin pie with whipped cream,420,5,58,20,2,240,38,0,Holiday indulgence
+MEAL-162,2025-11-29,morning_coffee,Large cold brew,80,2,4,0,0,60,2,0,9am coffee
+MEAL-163,2025-11-29,lunch,Black Friday mall food court - Chinese,880,28,105,35,3,1850,22,200,Heavy carb lunch
+MEAL-164,2025-11-29,snack,Pretzel,280,6,58,2,2,920,2,0,
+MEAL-165,2025-11-29,dinner,Grilled chicken salad,420,35,22,20,6,520,4,400,
+MEAL-166,2025-11-30,breakfast,Bagel with cream cheese,420,10,62,16,2,580,6,150,Carb heavy breakfast
+MEAL-167,2025-11-30,morning_coffee,Hazelnut latte,280,8,44,10,0,150,36,0,9:30am coffee
+MEAL-168,2025-11-30,lunch,Loaded baked potato with chili,880,32,95,40,8,1420,8,250,Heavy comfort lunch
+MEAL-169,2025-11-30,afternoon_coffee,Espresso,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-170,2025-11-30,snack,Brownie,280,3,42,12,2,160,28,0,
+MEAL-171,2025-11-30,dinner,Grilled steak with vegetables,520,42,22,28,5,580,4,400,
+MEAL-172,2025-12-01,breakfast,Cinnamon roll,420,6,68,16,1,380,35,100,High sugar pastry
+MEAL-173,2025-12-01,morning_coffee,Large vanilla latte,300,10,46,10,0,160,38,0,9am coffee
+MEAL-174,2025-12-01,lunch,Pad Thai with fried rice,920,25,118,35,4,1720,22,200,Heavy Thai lunch
+MEAL-175,2025-12-01,afternoon_coffee,Decaf americano,10,0,2,0,0,5,0,0,2pm - decaf
+MEAL-176,2025-12-01,snack,Chips,220,2,32,10,1,380,1,0,
+MEAL-177,2025-12-01,dinner,Baked chicken with roasted vegetables,450,38,28,18,6,520,4,400,
+MEAL-178,2025-12-02,breakfast,Frosted flakes with milk,340,6,72,4,1,280,35,200,Sugary cereal
+MEAL-179,2025-12-02,morning_coffee,Caramel macchiato,320,8,48,12,0,180,42,0,9:15am coffee
+MEAL-180,2025-12-02,lunch,Fish and chips,880,28,88,45,3,1380,4,200,Heavy fried lunch
+MEAL-181,2025-12-02,afternoon_coffee,Small coffee,5,0,1,0,0,5,0,0,1:30pm - last caffeine
+MEAL-182,2025-12-02,snack,Apple,95,0,25,0,4,2,19,0,
+MEAL-183,2025-12-02,dinner,Grilled salmon with quinoa,480,40,35,22,5,480,4,400,
+MEAL-184,2025-12-03,breakfast,Muffin with orange juice,420,5,78,12,2,340,45,150,Low protein high sugar
+MEAL-185,2025-12-03,morning_coffee,Large latte,240,10,28,10,0,160,22,0,9am coffee
+MEAL-186,2025-12-03,lunch,Burrito supreme with rice and beans,920,35,98,42,10,1780,6,250,Heavy Mexican
+MEAL-187,2025-12-03,afternoon_coffee,Espresso,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-188,2025-12-03,snack,Protein bar,220,20,24,8,4,180,8,0,
+MEAL-189,2025-12-03,dinner,Turkey stir-fry with vegetables,420,35,38,14,6,680,6,400,
+MEAL-190,2025-12-04,breakfast,Toast with jam and butter,340,4,62,10,2,420,28,100,Low protein
+MEAL-191,2025-12-04,morning_coffee,Mocha latte,350,10,48,14,0,160,38,0,9:30am coffee
+MEAL-192,2025-12-04,lunch,Chicken alfredo with breadsticks,920,38,85,48,3,1580,8,250,Heavy Italian
+MEAL-193,2025-12-04,afternoon_coffee,Decaf latte,140,6,16,5,0,85,12,0,2pm - decaf
+MEAL-194,2025-12-04,snack,Banana,105,1,27,0,3,1,14,0,
+MEAL-195,2025-12-04,dinner,Grilled shrimp with vegetables,380,32,22,16,5,520,4,400,
+MEAL-196,2025-12-05,breakfast,Pancakes with syrup,480,8,88,10,2,620,42,150,High carb breakfast
+MEAL-197,2025-12-05,morning_coffee,Vanilla cold brew,180,4,32,4,0,100,28,0,8:45am coffee
+MEAL-198,2025-12-05,lunch,Pizza (3 slices) with breadsticks,980,32,118,42,4,2050,12,200,Heavy pizza lunch
+MEAL-199,2025-12-05,afternoon_coffee,Small americano,10,0,2,0,0,5,0,0,1:45pm - last caffeine
+MEAL-200,2025-12-05,snack,Trail mix,240,6,28,14,3,65,14,0,
+MEAL-201,2025-12-05,dinner,Baked tilapia with rice,420,35,38,12,3,480,2,400,
+MEAL-202,2025-12-06,breakfast,Chocolate croissant with coffee,420,6,52,22,1,320,24,200,Pastry breakfast
+MEAL-203,2025-12-06,morning_coffee,Large hazelnut latte,300,10,46,10,0,160,38,0,9am coffee
+MEAL-204,2025-12-06,lunch,Fried chicken with mashed potatoes,920,38,75,52,4,1620,4,200,Heavy Southern lunch
+MEAL-205,2025-12-06,afternoon_coffee,Espresso,5,0,1,0,0,5,0,0,2pm - last caffeine
+MEAL-206,2025-12-06,snack,Cookies,240,2,38,10,1,180,22,0,
+MEAL-207,2025-12-06,dinner,Grilled chicken with vegetables,420,38,22,16,6,520,4,400,
+MEAL-208,2025-12-07,breakfast,Donut with juice,380,4,62,14,1,280,38,150,Weekend sugary start
+MEAL-209,2025-12-07,morning_coffee,Caramel latte,300,10,46,10,0,160,38,0,9:30am coffee
+MEAL-210,2025-12-07,lunch,Lasagna with garlic bread,880,35,88,42,4,1480,10,250,Heavy Italian
+MEAL-211,2025-12-07,snack,Apple with peanut butter,280,8,32,16,5,120,22,0,
+MEAL-212,2025-12-07,dinner,Grilled salmon with steamed vegetables,480,40,22,26,6,420,4,400,

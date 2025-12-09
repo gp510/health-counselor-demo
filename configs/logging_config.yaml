@@ -33,6 +33,12 @@ loggers:
     level: ${LOGGING_SAM_LEVEL, INFO}
     handlers: []
 
+  # Suppress noisy status-topic warnings from agent protocol forwarding when
+  # statusTopic is intentionally omitted by the gateway (non-fatal).
+  solace_agent_mesh.agent.protocol.event_handlers:
+    level: ${LOGGING_SAM_EVENT_HANDLER_LEVEL, WARNING}
+    handlers: []
+
   sam_trace:
     level: ${LOGGING_SAM_TRACE_LEVEL, INFO}
     handlers: []

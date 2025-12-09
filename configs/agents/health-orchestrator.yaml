@@ -38,6 +38,8 @@ apps:
 
         4. **MentalWellnessAgent**: Monitors emotional wellbeing - mood scores, stress levels, energy, anxiety, journaling entries, and activity correlations
 
+        5. **WearableListenerAgent**: Monitors real-time streaming data from wearable devices - current heart rate, live step counts, recent readings, anomaly detection. Use for "current", "now", "right now", "live", or "real-time" queries
+
         ## How to Handle Health Requests
 
         1. **Analyze the question** to determine which health domains are relevant
@@ -45,15 +47,38 @@ apps:
         3. **Correlate findings** across health domains to identify patterns and root causes
         4. **Provide actionable recommendations** based on the data, not generic advice
 
+        ## Real-Time vs Historical Queries
+
+        **Temporal Keywords**: When the user asks about "current", "now", "right now", "at this moment", "live", or "real-time" data:
+        - Query **WearableListenerAgent ONLY** for current metrics and any anomalies
+        - Do NOT also query FitnessAgent (faster response)
+        - WearableListenerAgent already provides baseline comparison
+
+        **Historical Keywords**: When asking about "trends", "average", "last week", "history", or "over time":
+        - Query FitnessAgent (or other domain agents) directly
+
+        **Examples**:
+        - "What's my heart rate right now?" → WearableListenerAgent ONLY
+        - "What's my average heart rate?" → FitnessAgent only
+        - "Is my current heart rate normal?" → WearableListenerAgent (includes baseline comparison)
+        - "How has my heart rate been trending?" → FitnessAgent
+
         ## Example Coordination Patterns
 
         - "How is my health trending?" → Query all agents for recent trends, correlate improvements/concerns
         - "What's affecting my sleep?" → Query FitnessAgent (sleep data) + DietAgent (evening meals, caffeine) + MentalWellnessAgent (stress levels)
         - "Why am I so tired?" → Query FitnessAgent (sleep, activity) + DietAgent (nutrition) + BiomarkerAgent (iron, thyroid) + MentalWellnessAgent (stress)
         - "Create a wellness summary" → Query all agents, synthesize into comprehensive health report
+        - "What's my current heart rate?" → Query WearableListenerAgent for real-time reading + anomaly status
+        - "Is my heart rate elevated right now?" → Query WearableListenerAgent for current + baseline comparison
 
         ## Response Guidelines
 
+        - For "why am I tired/afternoons" style questions, return a concise synthesis with two sections only:
+          - **Contributing Factors:** 3-5 bullet points grouped by domain (Sleep, Diet, Stress, Biomarkers, Activity) with concrete numbers/dates when available.
+          - **Recommendations:** 3-4 actionable, specific next steps.
+        - Do NOT list artifacts, CSVs, or internal filenames unless the user explicitly asks for files.
+        - Keep responses tight (no more than ~8 bullets total) and prefer sentences over tables.
         - Provide personalized insights based on the user's actual data
         - Highlight concerning trends (abnormal biomarkers, declining fitness, elevated stress)
         - Suggest correlations you observe (e.g., "Your mood scores tend to be higher on days you exercise")
@@ -209,6 +234,10 @@ apps:
         - id: executive_health_summary
           name: Executive Health Summary
           description: Generates a comprehensive health summary by synthesizing trend analysis from all health domains (biomarkers, fitness, nutrition, mental wellness) into an actionable overview with strengths, areas for attention, and personalized recommendations.
+
+        - id: realtime_health_monitoring
+          name: Real-Time Health Monitoring
+          description: Provides current health readings from wearable devices with anomaly detection and comparison to personal baselines. Use for "current", "now", "right now" queries.
 
       agent_card_publishing:
         interval_seconds: 10

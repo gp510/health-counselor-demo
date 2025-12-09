@@ -467,6 +467,12 @@ EVENT_TOPIC_PREFIX=health/events
 # Gateway Configuration
 FASTAPI_PORT=8000
 SESSION_SECRET_KEY=dev-only-not-for-production
+WEBUI_GATEWAY_ID=gdk-gateway-dev
+WEBUI_STATUS_TOPIC=workshop/a2a/v1/gateway/status/gdk-gateway-dev
+WEB_UI_GATEWAY_DATABASE_URL=sqlite:///webui_gateway.db
+
+# Orchestrator (SQL session store optional)
+ORCHESTRATOR_DATABASE_URL=sqlite:///orchestrator.db
 
 # Data Paths (inside container)
 DATA_PATH=/app

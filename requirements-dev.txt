@@ -3,3 +3,5 @@ pytest>=7.4.0
 pytest-asyncio>=0.21.0
 pytest-timeout>=2.1.0
 httpx>=0.24.0
+# Evaluation CLI dependency
+sam-rest-gateway @ git+https://github.com/SolaceLabs/solace-agent-mesh-core-plugins#subdirectory=sam-rest-gateway

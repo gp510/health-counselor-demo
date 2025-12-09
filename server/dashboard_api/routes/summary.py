@@ -35,35 +35,43 @@ def _row_to_fitness(row) -> FitnessRecord:
     if workout_type in ("none", "None", ""):
         workout_type = None
 
+    # Helper to safely convert to int (handles float strings like '111.0' and None)
+    def to_int(val):
+        return int(float(val)) if val else 0
+
     return FitnessRecord(
         record_id=row["record_id"],
         date=row["date"],
         data_source=row["data_source"],
-        steps=int(row["steps"]),
-        distance_km=float(row["distance_km"]),
-        active_minutes=int(row["active_minutes"]),
-        calories_burned=int(row["calories_burned"]),
-        resting_heart_rate=int(row["resting_heart_rate"]),
-        avg_heart_rate=int(row["avg_heart_rate"]),
-        max_heart_rate=int(row["max_heart_rate"]),
-        sleep_hours=float(row["sleep_hours"]),
-        sleep_quality_score=int(row["sleep_quality_score"]),
+        steps=to_int(row["steps"]),
+        distance_km=float(row["distance_km"] or 0),
+        active_minutes=to_int(row["active_minutes"]),
+        calories_burned=to_int(row["calories_burned"]),
+        resting_heart_rate=to_int(row["resting_heart_rate"]),
+        avg_heart_rate=to_int(row["avg_heart_rate"]),
+        max_heart_rate=to_int(row["max_heart_rate"]),
+        sleep_hours=float(row["sleep_hours"] or 0),
+        sleep_quality_score=to_int(row["sleep_quality_score"]),
         workout_type=workout_type,
-        workout_duration_min=int(row["workout_duration_min"]),
+        workout_duration_min=to_int(row["workout_duration_min"]),
     )
 
 
 def _row_to_wellness(row) -> MentalWellnessEntry:
     """Convert SQLite row to MentalWellnessEntry model."""
+    # Helper to safely convert to int (handles float strings like '7.0' and None)
+    def to_int(val):
+        return int(float(val)) if val else 0
+
     return MentalWellnessEntry(
         entry_id=row["entry_id"],
         date=row["date"],
         time_of_day=row["time_of_day"],
-        mood_score=int(row["mood_score"]),
-        energy_level=int(row["energy_level"]),
-        stress_level=int(row["stress_level"]),
-        anxiety_level=int(row["anxiety_level"]),
-        sleep_quality_rating=int(row["sleep_quality_rating"]),
+        mood_score=to_int(row["mood_score"]),
+        energy_level=to_int(row["energy_level"]),
+        stress_level=to_int(row["stress_level"]),
+        anxiety_level=to_int(row["anxiety_level"]),
+        sleep_quality_rating=to_int(row["sleep_quality_rating"]),
         activities=row["activities"] or "",
         social_interaction=row["social_interaction"],
         journal_entry=row["journal_entry"],
@@ -122,10 +130,18 @@ async def get_health_summary():
         result = cursor.fetchone()
         fitness_max_date_str = result["max_date"] if result else None
 
-        # Get today's fitness (or latest)
+        # Get today's fitness (or latest valid record)
+        # Filter out incomplete records where all key metrics are zero
+        # (e.g., records created by wearable listener with only heart rate data)
         cursor.execute(
             """
             SELECT * FROM fitness_data
+            WHERE NOT (
+                CAST(steps AS INTEGER) = 0
+                AND CAST(active_minutes AS INTEGER) = 0
+                AND CAST(calories_burned AS INTEGER) = 0
+                AND CAST(sleep_hours AS REAL) = 0
+            )
             ORDER BY date DESC
             LIMIT 1
             """

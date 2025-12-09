@@ -2,7 +2,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, Literal
 
-MealType = Literal["breakfast", "lunch", "dinner", "snack"]
+MealType = Literal["breakfast", "morning_coffee", "lunch", "afternoon_coffee", "snack", "dinner"]
 
 
 class DietEntry(BaseModel):
